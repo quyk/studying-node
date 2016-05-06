@@ -1,0 +1,30 @@
+{
+  "name": "studying-node",
+  "version": "1.0.0",
+  "description": "This project was created to study MEAN STACK",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/millysfabrielle/studying-node.git"
+  },
+  "author": "Millys Fabrielle <millysfabrielle@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/millysfabrielle/studying-node/issues"
+  },
+  "homepage": "https://github.com/millysfabrielle/studying-node#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "express-load": "^1.1.15",
+    "method-override": "^2.3.5",
+    "mongoose": "^4.4.14"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  }
+}
