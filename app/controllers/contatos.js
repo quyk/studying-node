@@ -1,54 +1,80 @@
-var contatos = [
-    {_id: 1, nome: 'Contato 1', email: 'contato1@exemplo.com' },
-    {_id: 2, nome: 'Contato 2', email: 'contato2@exemplo.com' },
-    {_id: 3, nome: 'Contato 3', email: 'contato3@exemplo.com' },
-    {_id: 4, nome: 'Contato 4', email: 'contato4@exemplo.com' },
-    {_id: 5, nome: 'Contato 5', email: 'contato5@exemplo.com' }
-]
+module.exports = function (app) {
 
-module.exports = function () {
+    var Contato = app.models.contato;
 
-    var controller = {
-        findAll: function (req, res) {
-            res.json(contatos);
-        },
-        findOne: function (req, res) {
-            var id = req.params.id;
-            var contato = contatos.filter(function (contato) {
-                return contato._id == id;
-            })[0];
+    var controller = {}
 
-            contato ? res.json(contato) : res.status(404).send('Contato não encontrado') ;
-        },
-        delete: function (req, res) {
-            var id = req.params.id;
-            contatos = contatos.filter(function (contato) {
-                return contato._id != id;
-            });
+    controller.findAll = function (req, res) {
 
-            // 204 means no content
-            res.status(204).end();
-        },
-        create: function(req, res){
-            var contato = req.body,
-                size = contatos.length;
-            contato._id = ++size;
-            contatos.push(contato);
-            res.json(contato);
-        },
-        update: function(req, res){
-            var contatoAlterar = req.body;
+        Contato.find().exec().then(
+            function(response){
+                res.json(response);
+            },
+            function (error) {
+                console.log(error);
+                res.status(500).json(error);
+            }
+        );
 
-            contatos = contatos.map(function(contato){
-                if(contato._id == contatoAlterar._id){
-                    contato = contatoAlterar;
-                }
-                return contato;
-            });
-            res.json(contatoAlterar);
-        }
-    }
+    };
 
+    controller.findOne = function (req, res) {
+        var id = req.params.id;
+
+        Contato.findById(id).exec().then(
+            function(response){
+                if(!response) throw new Error("Contato não foi localizado!");
+                res.json(response);
+            },
+            function(error){
+                console.log(error);
+                res.status(404).json(error);
+            }
+        );
+    };
+
+
+    controller.delete = function (req, res) {
+        var id = req.params.id;
+
+        Contato.remove({"_id": id}).exec().then(
+            function(){
+                // 204 means no content
+                res.status(204).end();
+            },
+            function(error){
+                console.log(error);
+            }
+        );
+
+    };
+
+    controller.create = function(req, res){
+        Contato.create(req.body).then(
+            function(response) {
+                // 201 means that post was created
+                res.status(201).json(response);
+            },
+            function(error) {
+                console.log(error);
+                res.status(500).json(error);
+            }
+        );
+    };
+
+    controller.update = function(req, res){
+        var id = req.params.id;
+
+        Contato.findByIdAndUpdate(id, req.body).exec().then(
+            function(response) {
+                res.json(response);
+            },
+            function(error) {
+                console.error(error)
+                res.status(500).json(error);
+            }
+        );
+    };
     return controller;
 
 }
