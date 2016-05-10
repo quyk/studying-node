@@ -4,19 +4,25 @@ angular.module('studying-node')
         $stateProvider
             .state('contatos', {
                 url: '/contatos',
-                templateUrl : 'partials/contato/contatos.html',
-                controller : 'ContatosCtrl'
+                templateUrl : 'partials/contato/contato-tpl.html',
+                controller: function($state){
+                    //$state.go('contatos.list');
+                }
+            })
+            .state('contatos.list',{
+                url: '/list',
+                templateUrl : 'partials/contato/contato-list-tpl.html',
+                controller : 'ListCtrl'
             })
             .state('contatos.view', {
-                url: '/:id',
+                url: '/view/:id',
                 templateUrl : 'partials/contato/contato-view-tpl.html',
                 controller : 'ViewCtrl'
             });
 
     })
 
-    .controller('ContatosCtrl',function ($scope, Contato) {
-
+    .controller('ListCtrl',function ($scope, Contato) {
         $scope.contatos = [];
         $scope.filtro = '';
 
@@ -47,22 +53,50 @@ angular.module('studying-node')
         }
 
     })
-    .controller('ViewCtrl',function ($scope, $stateParams, Contato) {
-
+    .controller('ViewCtrl',function ($scope, $stateParams, Contato, ContatoUtils) {
         var id = $stateParams.id ? $stateParams.id : null ;
 
-        Contato.one(id).get().then(
-            function (response) {
-                $scope.contato = response;
-            },
-            function (error) {
-                console.log("ERRO: Contato não encontrado");
-                console.log(error);
+        if(id) {
+            Contato.one(id).get().then(
+                function (response) {
+                    $scope.contato = response;
+                },
+                function (error) {
+                    console.log("ERRO: Contato não encontrado");
+                    console.log(error);
+                }
+            );
+        }
+
+
+        $scope.salvar = function(isValid){
+            if(isValid){
+
+                var contato = id
+                    ? $scope.contato
+                    : ContatoUtils.getRestangularizeElement($scope.contato);
+
+                contato.save().then(
+                    function(response){
+                        $scope.mensagem = {texto: "Salvo com sucesso!"};
+
+                        // limpa o formulário
+                        $scope.contato = {};
+                    },
+                    function(error){
+                        console.log("ERRO: Não foi possível salvar o contato");
+                        console.log(error);
+                    }
+                );
             }
-        );
+        };
 
     })
-
+    .service('ContatoUtils', function(Restangular){
+        this.getRestangularizeElement = function(contato){
+            return Restangular.restangularizeElement(null, contato,'contatos');
+        }
+    })
     .factory('Contato', function(Restangular) {
         return Restangular.service('contatos');
     })

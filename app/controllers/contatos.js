@@ -3,7 +3,7 @@ var contatos = [
     {_id: 2, nome: 'Contato 2', email: 'contato2@exemplo.com' },
     {_id: 3, nome: 'Contato 3', email: 'contato3@exemplo.com' },
     {_id: 4, nome: 'Contato 4', email: 'contato4@exemplo.com' },
-    {_id: 5, nome: 'Contato 5', email: 'contato5@exemplo.com' },
+    {_id: 5, nome: 'Contato 5', email: 'contato5@exemplo.com' }
 ]
 
 module.exports = function () {
@@ -28,6 +28,24 @@ module.exports = function () {
 
             // 204 means no content
             res.status(204).end();
+        },
+        create: function(req, res){
+            var contato = req.body,
+                size = contatos.length;
+            contato._id = ++size;
+            contatos.push(contato);
+            res.json(contato);
+        },
+        update: function(req, res){
+            var contatoAlterar = req.body;
+
+            contatos = contatos.map(function(contato){
+                if(contato._id == contatoAlterar._id){
+                    contato = contatoAlterar;
+                }
+                return contato;
+            });
+            res.json(contatoAlterar);
         }
     }
 
