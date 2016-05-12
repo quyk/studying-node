@@ -12,17 +12,17 @@ angular.module('studying-node')
             .state('contatos.list',{
                 url: '/list',
                 templateUrl : 'partials/contato/contato-list-tpl.html',
-                controller : 'ListCtrl'
+                controller : 'ContatoListCtrl'
             })
             .state('contatos.view', {
                 url: '/view/:id',
                 templateUrl : 'partials/contato/contato-view-tpl.html',
-                controller : 'ViewCtrl'
+                controller : 'ContatoViewCtrl'
             });
 
     })
 
-    .controller('ListCtrl',function ($scope, Contato) {
+    .controller('ContatoListCtrl',function ($scope, Contato) {
         $scope.contatos = [];
         $scope.filtro = '';
 
@@ -53,13 +53,14 @@ angular.module('studying-node')
         }
 
     })
-    .controller('ViewCtrl',function ($scope, $stateParams, Contato, ContatoUtils) {
+    .controller('ContatoViewCtrl',function ($scope, $stateParams, Contato, ContatoUtils) {
         var id = $stateParams.id ? $stateParams.id : null ;
 
         if(id) {
             Contato.one(id).get().then(
                 function (response) {
                     $scope.contato = response;
+                    console.log($scope.contato);
                 },
                 function (error) {
                     console.log("ERRO: Contato não encontrado");
@@ -76,6 +77,8 @@ angular.module('studying-node')
                     ? $scope.contato
                     : ContatoUtils.getRestangularizeElement($scope.contato);
 
+                console.log($scope.contato);
+
                 contato.save().then(
                     function(response){
                         $scope.mensagem = {texto: "Salvo com sucesso!"};
@@ -88,8 +91,16 @@ angular.module('studying-node')
                         console.log(error);
                     }
                 );
+
             }
         };
+
+        Contato.getList().then(
+            function(response){
+                $scope.contatos = response;
+                console.log(response);
+            }
+        );
 
     })
     .service('ContatoUtils', function(Restangular){

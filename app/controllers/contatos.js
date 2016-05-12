@@ -6,7 +6,7 @@ module.exports = function (app) {
 
     controller.findAll = function (req, res) {
 
-        Contato.find().exec().then(
+        Contato.find().populate('emergencia').exec().then(
             function(response){
                 res.json(response);
             },
@@ -50,6 +50,10 @@ module.exports = function (app) {
     };
 
     controller.create = function(req, res){
+
+        // testing for undefined
+        req.body.emergencia = req.body.emergencia || null;
+
         Contato.create(req.body).then(
             function(response) {
                 // 201 means that post was created
@@ -63,9 +67,12 @@ module.exports = function (app) {
     };
 
     controller.update = function(req, res){
-        var id = req.params.id;
+        var _id = req.body._id;
 
-        Contato.findByIdAndUpdate(id, req.body).exec().then(
+        // testing for undefined
+        req.body.emergencia = req.body.emergencia || null;
+
+        Contato.findByIdAndUpdate(_id, req.body).exec().then(
             function(response) {
                 res.json(response);
             },
