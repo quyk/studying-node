@@ -1,6 +1,7 @@
 <h1 class="text-center">Contato</h1>
 <p ng-show="mensagem.texto">
     {{mensagem.texto}}
+    {{mensagem.erro}}
 </p>
 <form name="form" novalidate >
     <div class="form-group">
@@ -29,6 +30,6 @@
         <button type="submit" class="btn btn-primary" ng-click="salvar(form.$valid)">
             Salvar
         </button>
-        <a href="#/" class="btn btn-default">Voltar</a>
+        <a ui-sref="contatos.list" class="btn btn-default">Voltar</a>
     </div>
 </form>

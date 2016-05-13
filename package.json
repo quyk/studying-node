@@ -25,11 +25,14 @@
     "mongoose": "^4.4.14"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "karma": "^0.13.22",
-    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^1.0.1",
-    "karma-jasmine": "^1.0.2",
+    "karma-coverage": "^1.0.0",
     "karma-mocha": "^1.0.1",
-    "mocha": "^2.4.5"
+    "karma-sinon-chai": "^1.2.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
   }
 }

@@ -22,49 +22,45 @@ angular.module('studying-node')
 
     })
 
-    .controller('ContatoListCtrl',function ($scope, Contato) {
+    .controller('ContatoListCtrl',function ($scope, ContatoService) {
         $scope.contatos = [];
         $scope.filtro = '';
 
-        function buscarContatos() {
-            Contato.getList().then(
+        function findAll() {
+            ContatoService.findAll().then(
                 function (response) {
                     $scope.contatos = response;
                 },
                 function (error) {
-                    console.log("ERRO: Não foi possível obter lista de contatos");
-                    console.log(error);
+                    $scope.mensagem = {erro: error};
                 }
             );
         }
-        buscarContatos();
-
+        findAll();
         
         $scope.removerContato = function (contato) {
-            Contato.one(contato._id).remove().then(
+            ContatoService.delete(contato._id).then(
                 function (response) {
-                    buscarContatos();
+                    findAll();
                 },
                 function (error) {
-                    console.log("ERRO: Não foi possível deletar o contato");
-                    console.log(error);
+                    $scope.mensagem = {texto: 'ERRO: Não foi possível deletar o contato', erro: error};
                 }
             );
-        }
+        };
 
     })
-    .controller('ContatoViewCtrl',function ($scope, $stateParams, Contato, ContatoUtils) {
-        var id = $stateParams.id ? $stateParams.id : null ;
+    .controller('ContatoViewCtrl',function ($scope, $stateParams, ContatoService) {
+        var _id = $stateParams.id ? $stateParams.id : null ;
 
-        if(id) {
-            Contato.one(id).get().then(
+        if(_id) {
+            ContatoService.findById(_id).then(
                 function (response) {
                     $scope.contato = response;
-                    console.log($scope.contato);
+                    console.log(response);
                 },
                 function (error) {
-                    console.log("ERRO: Contato não encontrado");
-                    console.log(error);
+                    $scope.mensagem = {erro: error};
                 }
             );
         }
@@ -72,42 +68,86 @@ angular.module('studying-node')
 
         $scope.salvar = function(isValid){
             if(isValid){
-
-                var contato = id
-                    ? $scope.contato
-                    : ContatoUtils.getRestangularizeElement($scope.contato);
-
-                console.log($scope.contato);
-
-                contato.save().then(
-                    function(response){
+                ContatoService.save($scope.contato).then(
+                    function (response) {
                         $scope.mensagem = {texto: "Salvo com sucesso!"};
-
-                        // limpa o formulário
                         $scope.contato = {};
                     },
-                    function(error){
-                        console.log("ERRO: Não foi possível salvar o contato");
-                        console.log(error);
+                    function (error) {
+                        $scope.mensagem = {texto: "ERRO: Não foi possível salvar o contato", erro: error};
                     }
                 );
-
             }
         };
 
-        Contato.getList().then(
-            function(response){
+        ContatoService.findAll().then(
+            function (response) {
                 $scope.contatos = response;
-                console.log(response);
+            },
+            function (error) {
+                $scope.mensagem = {erro: error};
             }
         );
 
     })
-    .service('ContatoUtils', function(Restangular){
-        this.getRestangularizeElement = function(contato){
-            return Restangular.restangularizeElement(null, contato,'contatos');
+
+    .factory('ContatoService', function ($q, Restangular, Contato) {
+
+        var deferred = $q.defer();
+
+        return{
+            findAll: function () {
+                return Contato.getList().then(
+                    function (response) {
+                        return $q.when(response);
+                    },
+                    function (error) {
+                        deferred.reject(error);
+                        return deferred.promise;
+                    }
+                );
+            },
+            findById: function (_id) {
+                return Contato.one(_id).get().then(
+                    function (response) {
+                        return $q.when(response);
+                    },
+                    function (error) {
+                        deferred.reject(error);
+                        return deferred.promise;
+                    }
+                );
+            },
+            save: function (contato) {
+                var contato = contato._id
+                    ? contato
+                    : Restangular.restangularizeElement(null, contato,'contatos');
+
+                return contato.save().then(
+                    function(response){
+                        deferred.resolve(response);
+                        return deferred.promise;
+                    },
+                    function(error){
+                        deferred.reject(error);
+                        return deferred.promise;
+                    }
+                );
+            },
+            delete: function (_id) {
+                return Contato.one(_id).remove().then(
+                    function (response) {
+                        return $q.when(response);
+                    },
+                    function (error) {
+                        deferred.reject(error);
+                        return deferred.promise;
+                    }
+                );
+            }
         }
     })
+
     .factory('Contato', function(Restangular) {
         return Restangular.service('contatos');
     })
