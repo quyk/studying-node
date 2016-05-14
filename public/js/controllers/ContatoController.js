@@ -27,6 +27,9 @@ angular.module('studying-node')
         $scope.filtro = '';
 
         var findAll = function () {
+
+            console.log(ContatoService.findAll());
+
             ContatoService.findAll().then(
                 function (response) {
                     $scope.contatos = response;
@@ -35,9 +38,10 @@ angular.module('studying-node')
                     $scope.mensagem = {erro: error};
                 }
             );
+
         }
         findAll();
-        
+
         $scope.removerContato = function (contato) {
             ContatoService.delete(contato._id).then(
                 function (response) {
@@ -80,7 +84,16 @@ angular.module('studying-node')
             }
         };
 
-        ContatoService.findAll().then(
+        ContatoService.findAll( function(error, response){
+            if(!!error){
+                $scope.mensagem = {erro: error};
+            } else {
+                $scope.contatos = response;
+            }
+        });
+
+        /*
+        ContatoService.findAll(callback).then(
             function (response) {
                 $scope.contatos = response;
             },
@@ -88,6 +101,7 @@ angular.module('studying-node')
                 $scope.mensagem = {erro: error};
             }
         );
+        */
 
     })
 
@@ -99,9 +113,13 @@ angular.module('studying-node')
             findAll: function () {
                 return Contato.getList().then(
                     function (response) {
-                        return $q.when(response);
+                        //callback(null, response);
+                        //return $q.when(response);
+                        deferred.resolve(response);
+                        return deferred.promise;
                     },
                     function (error) {
+                        //callback(error, null);
                         deferred.reject(error);
                         return deferred.promise;
                     }
