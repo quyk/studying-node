@@ -26,7 +26,7 @@ angular.module('studying-node')
         $scope.contatos = [];
         $scope.filtro = '';
 
-        function findAll() {
+        var findAll = function () {
             ContatoService.findAll().then(
                 function (response) {
                     $scope.contatos = response;
