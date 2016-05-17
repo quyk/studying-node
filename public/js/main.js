@@ -1,16 +1,13 @@
 angular.module('studying-node',['ui.router','restangular'])
 
     // Restangular confidurantion
-    .config(function(RestangularProvider) {
+    .config(function(RestangularProvider, $httpProvider) {
+        $httpProvider.interceptors.push('httpErrorResponseInterceptor');
         RestangularProvider.setBaseUrl('/');
+    })
 
-        RestangularProvider.setErrorInterceptor(function(response, deferred, responseHandler) {
-            if(response.status === 404) {
-                console.log("Oopps, page not found!");
-                return false; // error handled
-            }
-            return true; // error not handled
-        });
-
+    // run to initial state
+    .run(function ($state) {
+        $state.transitionTo('index');
     })
 ;

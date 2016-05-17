@@ -1,0 +1,13 @@
+.navbar-brand{
+    color: #ffffff !important;
+    font-size: 1.8em;
+}
+
+.navbar-inverse{
+    background-image: linear-gradient(to bottom,#003366 0,#003366 100%) !important;
+}
+.navbar-buttons{
+    padding: 0;
+    margin-top: 8px;
+    margin-right: 0px;
+}
