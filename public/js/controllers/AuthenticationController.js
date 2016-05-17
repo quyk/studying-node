@@ -5,16 +5,16 @@ angular.module('studying-node')
             .state('index', {
                 url: '/',
                 views: {
-                    'auth':{
+                    'auth@':{
                         templateUrl: 'partials/authentication/nav-authentication.html',
                         controller: 'AuthenticationCtrl'
                     }
                 }
             })
-            .state('login', {
-                url: '/login',
+            .state('index.login', {
+                url: 'login',
                 views: {
-                    'content':{
+                    'content@':{
                         templateUrl: 'partials/authentication/login.html',
                         controller: 'LoginCtrl'
                     }

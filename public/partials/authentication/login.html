@@ -9,5 +9,16 @@
             <input type="checkbox" value="remember-me"> Remember me
         </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+    <div class="btn-toolbar">
+        <button class="btn btn btn-success" type="submit">Entrar</button>
+        <span><a ui-sref="index.signup"> ou criar nova conta</a></span>
+    </div>
+
+    <div class="btn-toolbar">
+        <a href="/auth/github" class="btn btn-default btn-github">
+            <span class="fa fa-github fa-lg" aria-hidden="true"></span> Entrar com GitHub
+        </a>
+    </div>
+
 </form>
