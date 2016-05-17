@@ -9,12 +9,23 @@
 
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="/css/custom-theme.css" />
 
 </head>
 <body>
 
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a ui-sref="index" class="navbar-brand">NuMap</a>
+            </div>
+
+            <div ui-view name="auth"></div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div ui-view></div>
+        <div ui-view name="content"></div>
     </div>
 
 
@@ -29,6 +40,8 @@
     <script src="/bower_components/restangular/dist/restangular.min.js"></script>
 
     <script src="js/main.js" ></script>
+    <script src="js/services/InterceptorService.js" ></script>
     <script src="js/controllers/ContatoController.js" ></script>
+    <script src="js/controllers/AuthenticationController.js" ></script>
 </body>
 </html>

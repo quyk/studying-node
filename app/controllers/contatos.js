@@ -5,7 +5,7 @@ module.exports = function (app) {
     var controller = {}
 
     controller.findAll = function (req, res) {
-
+        console.log("REQ2 = " + req.user);
         Contato.find().populate('emergencia').exec().then(
             function(response){
                 res.json(response);
