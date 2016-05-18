@@ -1,11 +1,35 @@
 var passport = require('passport'),
     GitHubStrategy = require('passport-github').Strategy,
-    mongoose = require('mongoose');
+    JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt,
+    mongoose = require('mongoose'),
+    config = require('../config/variables');
 
 module.exports = function(){
 
     var Usuario = mongoose.model('Usuario');
 
+    // LOCAL STRATEGY
+    var opts = {};
+    opts.secretOrKey = config.secret;
+    opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
+
+    passport.use(new JwtStrategy(opts, function(jwt_payload, done){
+        Usuario.findOne({_id: jwt_payload.id}, function(err, user) {
+            if (err) {
+                return done(err, false);
+            }
+            if (user) {
+                done(null, user);
+            } else {
+                done(null, false);
+            }
+        });
+    }));
+
+
+
+    // GITHUB STRATEGY
     passport.use(new GitHubStrategy({
         clientID: 'ce3757d882aadb0a8812',
         clientSecret: '077aa5f5bba99182c2528ae3888c31dda94b205b',

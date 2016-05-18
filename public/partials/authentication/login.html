@@ -1,9 +1,12 @@
 <form class="form-signin">
     <h2 class="form-signin-heading">Entrar no NuMap</h2>
+
     <label for="inputEmail" class="sr-only">E-mail</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Informe o e-mail" required="" autofocus="">
+    <input type="text" id="inputEmail" class="form-control" ng-model="usuario.login" placeholder="Informe o e-mail" required="" autofocus="">
+
     <label for="inputPassword" class="sr-only">Senha</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Informe a senha" required="">
+    <input type="password" id="inputPassword" class="form-control" ng-model="usuario.password" placeholder="Informe a senha" required="">
+
     <div class="checkbox">
         <label>
             <input type="checkbox" value="remember-me"> Remember me
@@ -11,12 +14,12 @@
     </div>
 
     <div class="btn-toolbar">
-        <button class="btn btn btn-success" type="submit">Entrar</button>
+        <button class="btn btn-success" type="submit" ng-click="login()">Entrar</button>
         <span><a ui-sref="index.signup"> ou criar nova conta</a></span>
     </div>
 
     <div class="btn-toolbar">
-        <a href="/auth/github" class="btn btn-default btn-github">
+        <a href="/auth/github" class="btn btn-default">
             <span class="fa fa-github fa-lg" aria-hidden="true"></span> Entrar com GitHub
         </a>
     </div>

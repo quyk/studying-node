@@ -1,5 +1,6 @@
 var http = require('http'),
-    app = require('./config/express')();
+    app = require('./config/express')(),
+    config = require('./config/variables');
 require('./config/passport')();
 require('./config/database.js')('mongodb://localhost/numap');
 

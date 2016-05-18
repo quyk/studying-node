@@ -1,0 +1,19 @@
+<form class="form-signin">
+
+    <h2 class="form-signin-heading">Criar sua conta NuMap</h2>
+
+    <label for="inputName" class="sr-only">Nome</label>
+    <input type="text" id="inputName" class="form-control" ng-model="usuario.name" placeholder="Informe o seu nome" required="" autofocus="">
+
+    <label for="inputLogin" class="sr-only">Nome</label>
+    <input type="text" id="inputLogin" class="form-control" ng-model="usuario.login" placeholder="Informe um nome de usuário" required="">
+
+    <label for="inputPassword" class="sr-only">Senha</label>
+    <input type="password" id="inputPassword" class="form-control" ng-model="usuario.password" placeholder="Informe a senha" required="">
+
+    <div class="btn-toolbar">
+        <button class="btn btn-success" type="submit">Cadastrar</button>
+        <a ui-sref="index" class="btn btn-danger">Cancelar</a>
+    </div>
+
+</form>

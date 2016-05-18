@@ -1,4 +1,9 @@
-<div class="navbar-right navbar-buttons">
+<div ng-hide="isAuthenticated" class="navbar-right navbar-buttons">
     <a class="btn btn-default" ui-sref="index.login" role="button">Entrar</a>
     <a class="btn btn-default" ui-sref="index.signup" role="button">Cadastrar</a>
+</div>
+
+<div ng-show="isAuthenticated" class="navbar-right navbar-buttons">
+    <p style="color: #ffffff" >Wellcome, {{user.name}}</p>
+    <button class="btn btn-default" type="button" role="button">Sair</button>
 </div>

@@ -11,7 +11,6 @@ module.exports = function (app) {
                 res.json(response);
             },
             function (error) {
-                console.log(error);
                 res.status(500).json(error);
             }
         );
@@ -27,7 +26,6 @@ module.exports = function (app) {
                 res.json(response);
             },
             function(error){
-                console.log(error);
                 res.status(404).json(error);
             }
         );
@@ -43,7 +41,7 @@ module.exports = function (app) {
                 res.status(204).end();
             },
             function(error){
-                console.log(error);
+                res.status(500).json(error);
             }
         );
 
@@ -77,7 +75,6 @@ module.exports = function (app) {
                 res.json(response);
             },
             function(error) {
-                console.error(error)
                 res.status(500).json(error);
             }
         );

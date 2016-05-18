@@ -2,8 +2,8 @@ angular.module('studying-node')
 
     .config(function($stateProvider) {
         $stateProvider
-            .state('contatos', {
-                url: '/contatos',
+            .state('index.contatos', {
+                url: 'contatos',
                 templateUrl : 'partials/contato/contato-tpl.html',
                 controller: function($state){
                     //$state.go('contatos.list');
@@ -11,13 +11,21 @@ angular.module('studying-node')
             })
             .state('contatos.list',{
                 url: '/list',
-                templateUrl : 'partials/contato/contato-list-tpl.html',
-                controller : 'ContatoListCtrl'
+                views: {
+                    'content@':{
+                        templateUrl: 'partials/contato/contato-list-tpl.html',
+                        controller: 'ContatoListCtrl'
+                    }
+                }
             })
             .state('contatos.view', {
                 url: '/view/:id',
-                templateUrl : 'partials/contato/contato-view-tpl.html',
-                controller : 'ContatoViewCtrl'
+                views: {
+                    'content@':{
+                        templateUrl: 'partials/contato/contato-view-tpl.html',
+                        controller: 'ContatoViewCtrl'
+                    }
+                }
             });
 
     })

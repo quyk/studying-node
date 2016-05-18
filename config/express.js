@@ -4,14 +4,13 @@ var express = require('express'),
     methodOverride = require('method-override'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
-    passport = require('passport');
+    passport = require('passport'),
+    config = require('../config/variables');;
 
 module.exports = function () {
     var app = express();
 
     app.set('port', 3000);
-
-    console.log(__dirname+'/../public');
 
     app.use(express.static(__dirname+'/../public'));
     app.set('view engine', 'ejs');
