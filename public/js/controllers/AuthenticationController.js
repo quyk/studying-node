@@ -31,15 +31,12 @@ angular.module('studying-node')
             })
     })
 
-    .controller('AuthenticationCtrl',function ($scope, Auth, AuthService) {
+    .controller('AuthenticationCtrl',function ($scope, $state, Auth, AuthService) {
 
         $scope.isAuthenticated = false;
 
         if(AuthService.isAuthenticated()){
-
-            console.log('01');
             $scope.isAuthenticated = true;
-
             Auth.one('user-info').get().then(
                 function(response){
                     $scope.user = {name: response.name};
@@ -48,6 +45,12 @@ angular.module('studying-node')
                     //to do
                 }
             );
+        }
+
+
+        $scope.logout = function(){
+            AuthService.logout();
+            $state.go('index');
         }
 
 
