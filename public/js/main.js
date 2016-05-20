@@ -30,7 +30,8 @@ angular.module('studying-node',['ui.router','restangular'])
     })
 
     .constant('AUTH_EVENTS', {
-        notAuthenticated: 'auth-not-authenticated'
+        notAuthenticated: 'auth-not-authenticated',
+        isAuthenticated: 'is-authenticated'
     })
 
 ;

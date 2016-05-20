@@ -30,6 +30,6 @@
         <button type="submit" class="btn btn-primary" ng-click="salvar(form.$valid)">
             Salvar
         </button>
-        <a ui-sref="contatos.list" class="btn btn-default">Voltar</a>
+        <a data-ui-sref="index.contatos({reload: true})" data-ui-sref-opts="{reload: true}" class="btn btn-default">Voltar</a>
     </div>
 </form>

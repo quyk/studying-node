@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     findOrCreate = require('mongoose-findorcreate'),
-    bcrypt = require('bcrypt');
+    bcrypt = require('bcryptjs');
 
 module.exports = function(){
 

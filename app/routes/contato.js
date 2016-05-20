@@ -8,15 +8,16 @@ function verificarAutenticacao(req, res, next){
 
 module.exports = function (app) {
     var controller = app.controllers.contatos;
+    var authService = require('../services/authService');
 
     app.route('/contatos')
-        .get(verificarAutenticacao, controller.findAll)
-        .post(verificarAutenticacao, controller.create)
-        .put(verificarAutenticacao, controller.update);
+        .get(authService().isAuthenticated, controller.findAll)
+        .post(authService().isAuthenticated, controller.create)
+        .put(authService().isAuthenticated, controller.update);
 
     app.route('/contatos/:id')
-        .get(verificarAutenticacao, controller.findOne)
-        .delete(verificarAutenticacao, controller.delete);
+        .get(authService().isAuthenticated, controller.findOne)
+        .delete(authService().isAuthenticated, controller.delete);
 
 
 }

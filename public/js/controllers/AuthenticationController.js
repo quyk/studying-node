@@ -31,26 +31,33 @@ angular.module('studying-node')
             })
     })
 
-    .controller('AuthenticationCtrl',function ($scope, $state, Auth, AuthService) {
+    .controller('AuthenticationCtrl',function ($scope, $state, Auth, AuthService, AUTH_EVENTS) {
 
         $scope.isAuthenticated = false;
 
-        if(AuthService.isAuthenticated()){
-            $scope.isAuthenticated = true;
-            Auth.one('user-info').get().then(
-                function(response){
-                    $scope.user = {name: response.name};
-                    console.log(response);
-                }, function(error){
-                    //to do
-                }
-            );
-        }
+        // $scope.$on(AUTH_EVENTS.isAuthenticated, function(event, args) {
+        //     console.log('BROADCAST isAuthenticated');
+        //     getUserInfo();
+        // });
 
+        function getUserInfo() {
+            if(AuthService.isAuthenticated()){
+                $scope.isAuthenticated = true;
+                Auth.one('user-info').get().then(
+                    function(response){
+                        $scope.user = {name: response.name};
+                    }, function(error){
+                        //to do
+                    }
+                );
+            }
+        }
+        getUserInfo();
 
         $scope.logout = function(){
             AuthService.logout();
-            $state.go('index');
+            getUserInfo();
+            $state.go('index',{},{reload: true});
         }
 
 
@@ -61,7 +68,7 @@ angular.module('studying-node')
         $scope.login = function(){
             AuthService.login($scope.usuario).then(
                 function(response){
-                    $state.go('index.contatos');
+                    $state.go('index.contatos',{},{reload: true});
                 },
                 function(error){
                     $scope.mensagem = {texto: 'Login failed'};
@@ -70,8 +77,22 @@ angular.module('studying-node')
         }
 
     })
-    .controller('SignupCtrl',function ($scope) {
-        console.log('SignupCtrl');
+    .controller('SignupCtrl',function ($scope, $state, AuthService) {
+
+        $scope.signup = function() {
+            AuthService.register($scope.usuario).then(
+                function(response) {
+                    $state.go('index.login');
+                    // do some alert
+                    console.log('Cadastro realizado com sucesso' + response);
+                }, function(error) {
+                    console.log('Cadastro falhou!');
+                    console.log(error);
+                }
+            );
+        };
+
+
     })
 
 ;

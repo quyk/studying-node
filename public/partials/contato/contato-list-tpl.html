@@ -4,7 +4,7 @@
     </h1>
 </div>
 
-<a class="btn btn-primary" ui-sref="contatos.view">
+<a class="btn btn-primary" ui-sref="index.contatos.view">
     Novo
 </a>
 
@@ -29,7 +29,7 @@
         </tr>
         <tr ng-repeat="contato in contatos | filter: filtro">
             <td>
-                <a ui-sref="contatos.view({id: contato._id})">
+                <a ui-sref="index.contatos.view({id: contato._id})">
                     <i class="glyphicon glyphicon-search" />
                 </a>
             </td>

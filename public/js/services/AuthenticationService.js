@@ -1,21 +1,6 @@
 angular.module('studying-node')
 
-    .config(function ($httpProvider) {
-        $httpProvider.interceptors.push('AuthInterceptor');
-    })
-
-    .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
-        return {
-            responseError: function (response) {
-                $rootScope.$broadcast({
-                    401: AUTH_EVENTS.notAuthenticated
-                }[response.status], response);
-                return $q.reject(response);
-            }
-        };
-    })
-
-    .factory('AuthService', function($http, $q, Restangular, Auth){
+    .factory('AuthService', function($rootScope, $http, $q, Restangular, Auth, AUTH_EVENTS){
 
         var LOCAL_TOKEN_KEY = 'millysfabrielle@@@12@@#';
         var isAuthenticated = false;
@@ -39,6 +24,7 @@ angular.module('studying-node')
 
             // Set the token as header for your requests!
             $http.defaults.headers.common.Authorization = authToken;
+            // $rootScope.$broadcast(AUTH_EVENTS.isAuthenticated);
         }
 
         function destroyUserCredentials() {
@@ -46,6 +32,7 @@ angular.module('studying-node')
             isAuthenticated = false;
             $http.defaults.headers.common.Authorization = undefined;
             window.localStorage.removeItem(LOCAL_TOKEN_KEY);
+            // $rootScope.$broadcast(AUTH_EVENTS.isAuthenticated);
         }
 
         // call function
@@ -54,19 +41,18 @@ angular.module('studying-node')
         return {
             register: function(user){
                 return $q(function(resolve, reject) {
-                    Auth.one('/signup').post(user).then(
+                    Restangular.service('auth/signup').post(user).then(
                         function(response){
-                            resolve(response.data.msg);
+                            resolve(response);
                         },
                         function(error){
-                            reject(error.data);
+                            reject(error);
                         }
                     );
                 });
             },
             login: function(user) {
                 return $q(function(resolve, reject) {
-
                     Restangular.service('auth/login').post(user).then(
                         function(response){
                             storeUserCredentials(response.token);

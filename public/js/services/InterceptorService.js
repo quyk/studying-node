@@ -1,20 +1,30 @@
 angular.module('studying-node')
-    .factory('httpErrorResponseInterceptor', function($injector, $q){
+
+    .factory('httpErrorResponseInterceptor', function($rootScope, $q, AUTH_EVENTS) {
         return {
-            response : function(responseData) {
-                return responseData;
-             },
             responseError : function error(response) {
 
-                var $state = $injector.get('$state');
+                console.log(response.status);
 
                 switch (response.status) {
                     case 401:
-                        $state.go('auth', {}, { reload: true });
+                        // $injector.get('$state').go('login', {'status': 401 }, { reload: true });
+                        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+                        console.log("BROADCAST ENVIADO");
                         break;
                 }
                 return $q.reject(response);
             }
         };
-        return {};
     })
+
+    .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+        $rootScope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+            console.log(' RECEBI UM BROADCAST');
+            AuthService.logout();
+            $state.go('index.login');
+
+        });
+    })
+
+;

@@ -4,30 +4,17 @@ module.exports = function (app) {
     var jwt = require('jwt-simple');
     var Usuario = app.models.usuario;
     var config = require('../../config/variables');
-
-    var getToken = function(headers) {
-        if (headers && headers.authorization) {
-            var parted = headers.authorization.split(' ');
-            if (parted.length === 2) {
-                return parted[1];
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    };
+    var authService = require('../services/authService')();
 
     var controller = {
         getUserInfo: function(req, res){
-            var token = getToken(req.headers);
-            if (token) {
-                var decoded = jwt.decode(token, config.secret);
+            var decodedToken =  authService.restoreToken(req.headers);
+            if (decodedToken) {
 
-                Usuario.findOne({login: decoded.login}).select('-_id login name').exec().then(
+                Usuario.findOne({login: decodedToken.login}).select('-_id login name').exec().then(
                     function(response){
                         if (!response) {
-                            return res.status(403).send('Authentication failed. User not found.');
+                            return res.status(404).send('User Info failed. User not found.');
                         } else {
                             return res.json(response);
                         }

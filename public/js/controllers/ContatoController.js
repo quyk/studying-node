@@ -2,15 +2,11 @@ angular.module('studying-node')
 
     .config(function($stateProvider) {
         $stateProvider
-            .state('index.contatos', {
-                url: 'contatos',
-                templateUrl : 'partials/contato/contato-tpl.html',
-                controller: function($state){
-                    //$state.go('contatos.list');
-                }
-            })
-            .state('contatos.list',{
+            .state('index.contatos.list', {
                 url: '/list',
+            })
+            .state('index.contatos',{
+                url: 'contatos',
                 views: {
                     'content@':{
                         templateUrl: 'partials/contato/contato-list-tpl.html',
@@ -18,7 +14,7 @@ angular.module('studying-node')
                     }
                 }
             })
-            .state('contatos.view', {
+            .state('index.contatos.view', {
                 url: '/view/:id',
                 views: {
                     'content@':{
@@ -30,14 +26,12 @@ angular.module('studying-node')
 
     })
 
-    .controller('ContatoListCtrl',function ($scope, ContatoService) {
+    .controller('ContatoListCtrl',function ($scope, $state, ContatoService) {
+
         $scope.contatos = [];
         $scope.filtro = '';
 
         var findAll = function () {
-
-            console.log(ContatoService.findAll());
-
             ContatoService.findAll().then(
                 function (response) {
                     $scope.contatos = response;
@@ -69,7 +63,6 @@ angular.module('studying-node')
             ContatoService.findById(_id).then(
                 function (response) {
                     $scope.contato = response;
-                    console.log(response);
                 },
                 function (error) {
                     $scope.mensagem = {erro: error};
@@ -92,16 +85,7 @@ angular.module('studying-node')
             }
         };
 
-        ContatoService.findAll( function(error, response){
-            if(!!error){
-                $scope.mensagem = {erro: error};
-            } else {
-                $scope.contatos = response;
-            }
-        });
-
-        /*
-        ContatoService.findAll(callback).then(
+        ContatoService.findAll().then(
             function (response) {
                 $scope.contatos = response;
             },
@@ -109,7 +93,7 @@ angular.module('studying-node')
                 $scope.mensagem = {erro: error};
             }
         );
-        */
+
 
     })
 
