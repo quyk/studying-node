@@ -8,15 +8,40 @@ module.exports = function(app){
     app.route('/auth/signup').post(controller.signUp);
     app.route('/auth/login').post(controller.logIn);
 
-    app.route('/auth/user-info').get(authService().isAuthenticated, controller.getUserInfo);
-
-    // GitHub Authentication
-    app.get('/auth/github', passport.authenticate('github'));
-    app.get('/auth/github/callback',
-        passport.authenticate(
-            'github',
-            {successRedirect: '/'}
+    // Facebook Authentication
+    app.route('/auth/facebook')
+        .get(passport.authenticate('facebook',
+            {
+                session: false,
+                scope: 'email'
+            }
         )
     );
+
+    app.route('/auth/facebook/callback')
+        .get(passport.authenticate('facebook',
+            {
+                session: false,
+                failureRedirect : '/'
+            }),
+            controller.facebookLogIn
+        );
+
+
+    /*app.route('/auth/facebook/callback')
+        .get(passport.authenticate('facebook',
+            {
+            // session: false,
+            successRedirect : '/',
+            failureRedirect : '/'
+            }
+        )
+    );*/
+
+
+    app.route('/auth/user-info').get(authService().isAuthenticated, controller.getUserInfo);
+
+    app.route('/auth/logout').get(authService().isAuthenticated, controller.logout);
+
 
 }

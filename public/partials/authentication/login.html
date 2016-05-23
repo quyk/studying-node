@@ -1,8 +1,10 @@
 <form class="form-signin">
     <h2 class="form-signin-heading">Entrar no NuMap</h2>
 
-    <label for="inputEmail" class="sr-only">Usuário</label>
-    <input type="text" id="inputEmail" class="form-control" ng-model="usuario.login" placeholder="Informe o usuário" required="" autofocus="">
+    <div ng-show="mensagem.texto" class="alert alert-danger">{{mensagem.texto}}</div>
+
+    <label for="inputEmail" class="sr-only">Email</label>
+    <input type="text" id="inputEmail" class="form-control" ng-model="usuario.email" placeholder="Informe o e-mail" required="" autofocus="">
 
     <label for="inputPassword" class="sr-only">Senha</label>
     <input type="password" id="inputPassword" class="form-control" ng-model="usuario.password" placeholder="Informe a senha" required="">
@@ -19,9 +21,16 @@
     </div>
 
     <div class="btn-toolbar">
-        <a href="/auth/github" class="btn btn-default">
-            <span class="fa fa-github fa-lg" aria-hidden="true"></span> Entrar com GitHub
+        <a href="/auth/facebook" class="btn btn-block btn-social btn-facebook">
+            <span class="fa fa-facebook-official fa-lg" aria-hidden="true"></span> Entrar com Facebook
         </a>
     </div>
+
+    <!--<div class="btn-toolbar">
+        <button type="button" class="btn btn-block btn-social btn-facebook" ng-click="fbLogin()">
+            <span class="fa fa-facebook-official fa-lg" aria-hidden="true"></span> Entrar com Facebook
+        </button>
+    </div>-->
+
 
 </form>

@@ -29,7 +29,7 @@ module.exports = function (app) {
         var token = getToken(req.headers);
         if (token) {
             var decoded = jwt.decode(token, config.secret);
-            Usuario.findOne({login: decoded.login}).select('-_id login name').exec().then(
+            Usuario.findOne({email: decoded.email}).select('-_id email name').exec().then(
                 function(response){
                     if (!response) {
                         // console.log('Status 403 Authentication failed. User not found.');

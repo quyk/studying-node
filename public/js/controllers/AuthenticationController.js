@@ -29,16 +29,28 @@ angular.module('studying-node')
                     }
                 }
             })
+            .state('index.teste', {
+                url: 'teste/:token',
+                views: {
+                    'content@':{
+                        templateUrl: '',
+                        controller: 'TesteCtrl'
+                    }
+                }
+            })
+    })
+
+    .controller('TesteCtrl',function ($scope, $state,$stateParams,  AuthService) {
+
+        console.log("AQUI NO TesteCtrl");
+
+        console.log($stateParams);
+
     })
 
     .controller('AuthenticationCtrl',function ($scope, $state, Auth, AuthService, AUTH_EVENTS) {
 
         $scope.isAuthenticated = false;
-
-        // $scope.$on(AUTH_EVENTS.isAuthenticated, function(event, args) {
-        //     console.log('BROADCAST isAuthenticated');
-        //     getUserInfo();
-        // });
 
         function getUserInfo() {
             if(AuthService.isAuthenticated()){
@@ -55,13 +67,17 @@ angular.module('studying-node')
         getUserInfo();
 
         $scope.logout = function(){
-            AuthService.logout();
-            getUserInfo();
-            $state.go('index',{},{reload: true});
+            AuthService.logout().then(
+                function(response){
+                    getUserInfo();
+                    $state.go('index',{},{reload: true});
+                },
+                function(error){
+                    $scope.mensagem = {texto: 'Logout failed: '+ error};
+                }
+            );
         }
 
-
-        console.log('AuthenticationCtrl');
     })
     .controller('LoginCtrl',function ($scope, $state, AuthService) {
 
@@ -91,8 +107,6 @@ angular.module('studying-node')
                 }
             );
         };
-
-
     })
 
 ;

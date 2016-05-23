@@ -22,7 +22,9 @@ module.exports = function (app) {
 
         Contato.findById(id).exec().then(
             function(response){
-                if(!response) throw new Error("Contato não foi localizado!");
+                if(!response){
+                    res.status(404).json("Contato não foi localizado!");
+                }
                 res.json(response);
             },
             function(error){

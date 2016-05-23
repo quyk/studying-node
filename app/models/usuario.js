@@ -5,19 +5,23 @@ var mongoose = require('mongoose'),
 module.exports = function(){
 
     var schema = mongoose.Schema({
-        login: {
+        name:{
             type: String,
+            required: true
+        },
+        email: {
+            type:String,
             required: true,
-            index: {
+            index:{
                 unique: true
             }
         },
-        password: {
-            type: String
+        local:{
+            password: {type: String},
         },
-        name: {
-            type: String,
-            required: true
+        facebook: {
+            id: {type: String},
+            token: {type: String},
         },
         inclusao: {
             type: Date,
@@ -29,16 +33,17 @@ module.exports = function(){
     //http://blog.matoski.com/articles/jwt-express-node-mongoose/
     schema.pre('save', function (next) {
         var user = this;
-        if (this.isModified('password') || this.isNew) {
+        // if (this.isModified('local.password') || this.isNew) {
+        if (user.local.password != null) {
             bcrypt.genSalt(10, function (err, salt) {
                 if (err) {
                     return next(err);
                 }
-                bcrypt.hash(user.password, salt, function (err, hash) {
+                bcrypt.hash(user.local.password, salt, function (err, hash) {
                     if (err) {
                         return next(err);
                     }
-                    user.password = hash;
+                    user.local.password = hash;
                     next();
                 });
             });
@@ -48,7 +53,7 @@ module.exports = function(){
     });
 
     schema.methods.comparePassword = function (passw, cb) {
-        bcrypt.compare(passw, this.password, function (err, isMatch) {
+        bcrypt.compare(passw, this.local.password, function (err, isMatch) {
             if (err) {
                 return cb(err);
             }

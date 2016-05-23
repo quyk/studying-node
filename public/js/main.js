@@ -1,9 +1,14 @@
 angular.module('studying-node',['ui.router','restangular'])
 
     // Restangular confidurantion
-    .config(function(RestangularProvider, $httpProvider) {
+    .config(function(RestangularProvider, $httpProvider, $locationProvider) {
+
         $httpProvider.interceptors.push('httpErrorResponseInterceptor');
-        RestangularProvider.setBaseUrl('/');
+
+        RestangularProvider.setBaseUrl('http://localhost:3000/');
+
+
+        // RestangularProvider.setDefaultHeaders({'Access-Control-Allow-Origin' : '*'});
     })
 
     // run to initial state
@@ -17,7 +22,8 @@ angular.module('studying-node',['ui.router','restangular'])
             var authorizedResouces = [
                 'index',
                 'index.login',
-                'index.signup'
+                'index.signup',
+                'index.teste'
             ];
 
             if (!AuthService.isAuthenticated()) {

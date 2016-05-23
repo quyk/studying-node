@@ -65,7 +65,28 @@ angular.module('studying-node')
                 });
             },
             logout: function() {
+
+                /*
+                Destroy token credential for local login
+                */
                 destroyUserCredentials();
+
+                /*
+                Implementado para a session do facebook, pois no momento apenas o local session está utilizando
+                Token para autenticação
+                */
+                return $q(function(resolve, reject) {
+                    Auth.one('/logout').get().then(
+                        function(response){
+                            resolve();
+                        },
+                        function(error){
+                            reject(error);
+                        }
+                    );
+                });
+
+
             },
             isAuthenticated: function(){
                 return isAuthenticated;

@@ -1,5 +1,5 @@
 var passport = require('passport'),
-    GitHubStrategy = require('passport-github').Strategy,
+    FacebookStrategy = require('passport-facebook').Strategy,
     JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt,
     mongoose = require('mongoose'),
@@ -9,7 +9,9 @@ module.exports = function(){
 
     var Usuario = mongoose.model('Usuario');
 
-    // LOCAL STRATEGY
+    // =========================================================================
+    // LOCAL LOGIN =============================================================
+    // =========================================================================
     var opts = {};
     opts.secretOrKey = config.secret;
     opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
@@ -27,26 +29,69 @@ module.exports = function(){
         });
     }));
 
+    // =========================================================================
+    // FACEBOOK ================================================================
+    // =========================================================================
+    passport.use(new FacebookStrategy(
+        {
+            clientID: config.facebookAuth.clientID,
+            clientSecret: config.facebookAuth.clientSecret,
+            callbackURL: config.facebookAuth.callbackURL,
+            profileFields: ['id', 'displayName', 'photos', 'email']
+        },
+        function (token, refreshToken, profile, done) {
 
+            process.nextTick( function () {
 
-    // GITHUB STRATEGY
-    passport.use(new GitHubStrategy({
-        clientID: 'ce3757d882aadb0a8812',
-        clientSecret: '077aa5f5bba99182c2528ae3888c31dda94b205b',
-        callbackURL: 'http://localhost:3000/auth/github/callback'
-    }, function(accessToken, refreshToken, profile, done) {
+                /*Usuario.findOrCreate(
+                    {'facebook.id': profile.id},
+                    {
+                        name: profile.displayName,
+                        email: profile.emails[0].value,
+                        facebook: {
+                            id: profile.id,
+                            token: token
+                        }
+                    },
+                    function(error, usuario){
+                        if(error) {
+                            return done(error);
+                        }
+                        return done(null, usuario);
+                    }
+                );*/
 
-        Usuario.findOrCreate(
-            { "login" : profile.username},
-            { "nome" : profile.username},
-            function(erro, usuario) {
-                if(erro) {
-                    return done(erro);
-                }
-                return done(null, usuario);
-            }
-        );
-    }));
+                Usuario.findOne({'facebook.id': profile.id}, function(err, user) {
+                 if (err) {
+                 return done(err, false);
+                 }
+                 if (user) {
+                 done(null, user);
+                 } else {
+
+                 var usuario = new Usuario();
+                 usuario.name = profile.displayName;
+                 usuario.email = profile.emails[0].value;
+                 usuario.facebook = {
+                 id: profile.id,
+                 token: token
+                 };
+                 usuario.save(function (err) {
+                 if(err){
+                 throw err;
+                 }
+                 return done(null, usuario);
+
+                 });
+
+                 }
+                 });
+
+            } );
+
+        }
+    ));
+
 
     // indica ao passport para serializar apenas o _id do usuário, para não onerar a memória
     passport.serializeUser(function(usuario, done) {
