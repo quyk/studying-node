@@ -5,28 +5,16 @@ var mongoose = require('mongoose'),
 module.exports = function(){
 
     var schema = mongoose.Schema({
-        name:{
-            type: String,
-            required: true
-        },
-        email: {
-            type:String,
-            required: true,
-            index:{
-                unique: true
-            }
-        },
+        name:{ type: String, required: true },
+        email: { type:String, required: true, unique: true},
+        picture: {type: String },
         local:{
-            password: {type: String},
+            password: {type: String}
         },
         facebook: {
-            id: {type: String},
-            token: {type: String},
+            id: {type: String}
         },
-        inclusao: {
-            type: Date,
-            default: Date.now
-        }
+        inclusao: { type: Date, default: Date.now }
     });
     schema.plugin(findOrCreate);
 

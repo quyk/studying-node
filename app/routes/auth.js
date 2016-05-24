@@ -18,14 +18,8 @@ module.exports = function(app){
         )
     );
 
-    app.route('/auth/facebook/callback')
-        .get(passport.authenticate('facebook',
-            {
-                session: false,
-                failureRedirect : '/'
-            }),
-            controller.facebookLogIn
-        );
+    app.route('/auth/facebook')
+        .post(controller.facebookLogIn);
 
 
     /*app.route('/auth/facebook/callback')

@@ -1,10 +1,21 @@
 
 module.exports = function (app) {
 
+    var moment = require('moment');
     var jwt = require('jwt-simple');
-    var Usuario = app.models.usuario;
+    var User = app.models.user;
     var config = require('../../config/variables');
     var authService = require('../services/authService')();
+    var request = require('request');
+
+    function createJWT(user) {
+        var payload = {
+            sub: user._id,
+            iat: moment().unix(),
+            exp: moment().add(14, 'days').unix()
+        };
+        return jwt.encode(payload, config.secret);
+    }
 
     var controller = {
         getUserInfo: function(req, res){
@@ -12,7 +23,7 @@ module.exports = function (app) {
             if (decodedToken) {
 
                 // .select('-_id email name')
-                Usuario.findOne({'email': decodedToken.email}).exec().then(
+                User.findOne({'email': decodedToken.email}).exec().then(
                     function(response){
                         if (!response) {
                             return res.status(404).send('User Info failed. User not found.');
@@ -42,7 +53,7 @@ module.exports = function (app) {
                 user.local.password = req.body.password;
 
                 // save the user
-                Usuario.create(user).then(
+                User.create(user).then(
                     function(response) {
                         // 201 means that post was created
                         res.status(201).json(response);
@@ -55,7 +66,7 @@ module.exports = function (app) {
             }
         },
         logIn: function(req, res){
-            Usuario.findOne({'email': req.body.email}).then(
+            User.findOne({'email': req.body.email}).then(
                 function(response){
                     if(!response){
                         res.status(500).json('Authentication failed. User not found.');
@@ -93,17 +104,98 @@ module.exports = function (app) {
         },
         facebookLogIn: function (req, res) {
 
-            var user = {
-                _id: req.user._id,
-                name: req.user.name,
-                email: req.user.email
+            var fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
+            var accessTokenUrl = 'https://graph.facebook.com/v2.5/oauth/access_token';
+            var graphApiUrl = 'https://graph.facebook.com/v2.5/me?fields=' + fields.join(',');
+            var params = {
+                code: req.body.code,
+                client_id: req.body.clientId,
+                client_secret: config.facebookAuth.clientSecret,
+                redirect_uri: req.body.redirectUri
             };
 
-            // if user is found and password is right create a token
-            var token = jwt.encode(user, config.secret);
-            // return the information including token as JSON
-            // res.json({token: 'JWT ' + token});
-            res.redirect('/#/teste/'+token);
+            // Step 1. Exchange authorization code for access token.
+            request.get({ url: accessTokenUrl, qs: params, json: true }, function(err, response, accessToken) {
+
+                if (response.statusCode !== 200) {
+                    return res.status(500).send({ message: accessToken.error.message });
+                }
+
+                console.log('---ACCESS TOKEN----');
+                console.log(accessToken);
+
+                // Step 2. Retrieve facebook profile information about the current user.
+                request.get({ url: graphApiUrl, qs: accessToken, json: true }, function(err, response, profile) {
+
+
+                    console.log('---PROFILE----');
+                    console.log(profile);
+
+                    if (response.statusCode !== 200) {
+                        return res.status(500).send({ message: profile.error.message });
+                    }
+
+                    /*
+                    If TRUE means that user already have one Authorization header set
+                        1 - Try find users by their facebook profile ID
+                          - IF FOUND, means that user already exist and is authenticated, send back with status 409
+                          - IF NOT FOUND, means that user does not have a facebook linked account, try to find the
+                            authenticated user to attach facebook account
+                    */
+
+                    if (req.header('Authorization')) {
+
+                        User.findOne({ 'facebook.id': profile.id }, function(err, existingUser) {
+                            if (existingUser) {
+                                return res.status(409).send({ message: 'There is already a Facebook account that belongs to you' });
+                            }
+
+                            var token = req.header('Authorization').split(' ')[1];
+                            var payload = jwt.decode(token, config.secret);
+
+                            User.findById(payload.sub, function(err, user) {
+                                if (!user) {
+                                    return res.status(400).send({ message: 'User not found' });
+                                }
+                                user.facebook = {id: profile.id};
+                                user.picture = user.picture || 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large';
+                                user.name = user.displayName || profile.name;
+                                user.save(function() {
+                                    var token = createJWT(user);
+                                    res.send({ token: token });
+                                });
+                            });
+                        });
+                    } else {
+                        // Step 3. Create a new user account or return an existing one.
+
+                        /*
+                         * Means the user does not have an Authorization header
+                         * TRY find the user account though facebook id
+                         * IF FOUND - generate JWT token from existing user account
+                         * IF NOT FOUND - create new account and generate the token
+                         */
+
+                        User.findOne({ 'facebook.id': profile.id }, function(err, existingUser) {
+                            if (existingUser) {
+                                var token = createJWT(existingUser);
+                                return res.send({ token: token });
+                            }
+                            var user = new User();
+                            user.name = profile.name;
+                            user.email = profile.email;
+                            user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+                            user.facebook = {id: profile.id};
+
+                            user.save(function() {
+                                var token = createJWT(user);
+                                res.send({ token: token });
+                            });
+                        });
+                    }
+                });
+            });
+
 
         }
     };

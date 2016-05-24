@@ -1,5 +1,36 @@
 angular.module('studying-node')
 
+    .config(function($authProvider) {
+        $authProvider.httpInterceptor = function() { return true; },
+        $authProvider.withCredentials = true;
+        //$authProvider.tokenRoot = null;
+        $authProvider.baseUrl = '/';
+        //$authProvider.loginUrl = '/auth/login';
+        //$authProvider.signupUrl = '/auth/signup';
+        //$authProvider.unlinkUrl = '/auth/unlink/';
+        $authProvider.tokenName = 'token';
+        $authProvider.tokenPrefix = 'satellizer';
+        $authProvider.authHeader = 'Authorization';
+        $authProvider.authToken = 'Bearer';
+        $authProvider.storageType = 'localStorage';
+
+        // Facebook
+        $authProvider.facebook({
+            clientId: '282319505440877',
+            name: 'facebook',
+            url: '/auth/facebook',
+            authorizationEndpoint: 'https://www.facebook.com/v2.5/dialog/oauth',
+            redirectUri: window.location.origin + '/',
+            requiredUrlParams: ['display', 'scope'],
+            scope: ['email'],
+            scopeDelimiter: ',',
+            display: 'popup',
+            type: '2.0',
+            popupOptions: { width: 580, height: 400 }
+        });
+    })
+
+
     .config(function($stateProvider) {
         $stateProvider
             .state('index', {
@@ -30,7 +61,7 @@ angular.module('studying-node')
                 }
             })
             .state('index.teste', {
-                url: 'teste/:token',
+                url: 'teste',
                 views: {
                     'content@':{
                         templateUrl: '',
@@ -38,14 +69,6 @@ angular.module('studying-node')
                     }
                 }
             })
-    })
-
-    .controller('TesteCtrl',function ($scope, $state,$stateParams,  AuthService) {
-
-        console.log("AQUI NO TesteCtrl");
-
-        console.log($stateParams);
-
     })
 
     .controller('AuthenticationCtrl',function ($scope, $state, Auth, AuthService, AUTH_EVENTS) {
@@ -79,7 +102,17 @@ angular.module('studying-node')
         }
 
     })
-    .controller('LoginCtrl',function ($scope, $state, AuthService) {
+    .controller('LoginCtrl',function ($scope, $state, $auth, AuthService) {
+
+        $scope.login_fb = function(){
+            $auth.authenticate('facebook')
+                .then(function(response) {
+                    console.log(response);
+                })
+                .catch(function(response) {
+                    console.log(response);
+                });
+        }
 
         $scope.login = function(){
             AuthService.login($scope.usuario).then(
@@ -108,5 +141,52 @@ angular.module('studying-node')
             );
         };
     })
+
+    .factory('Facebook', ["$q", "$window", "$rootScope", function ($q, $window, $rootScope) {
+
+        // since we are resolving a thirdparty response,
+        // we need to do so in $apply
+        var resolve = function (errval, retval, deferred) {
+            $rootScope.$apply(function () {
+                if (errval) {
+                    deferred.reject(errval);
+                } else {
+                    retval.connected = true;
+                    deferred.resolve(retval);
+                }
+            });
+        }
+
+        var _login = function () {
+            var deferred = $q.defer();
+            //first check if we already have logged in
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    // the user is logged in and has authenticated your
+                    // app
+                    console.log("fb user already logged in");
+                    deferred.resolve(response);
+                } else {
+                    // the user is logged in to Facebook,
+                    // but has not authenticated your app
+                    FB.login(function (response) {
+                        if (response.authResponse) {
+                            console.log("fb user logged in");
+                            resolve(null, response, deferred);
+                        } else {
+                            console.log("fb user could not log in");
+                            resolve(response.error, null, deferred);
+                        }
+                    });
+                }
+            });
+
+            return deferred.promise;
+        }
+
+        return {
+            login: _login
+        };
+    }])
 
 ;

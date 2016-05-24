@@ -1,14 +1,13 @@
-angular.module('studying-node',['ui.router','restangular'])
+angular.module('studying-node',['ui.router','restangular','satellizer'])
 
     // Restangular confidurantion
     .config(function(RestangularProvider, $httpProvider, $locationProvider) {
 
         $httpProvider.interceptors.push('httpErrorResponseInterceptor');
-
         RestangularProvider.setBaseUrl('http://localhost:3000/');
+        RestangularProvider.setFullResponse(true);
 
-
-        // RestangularProvider.setDefaultHeaders({'Access-Control-Allow-Origin' : '*'});
+        //  RestangularProvider.setDefaultHeaders({'Access-Control-Allow-Origin' : '*'});
     })
 
     // run to initial state
