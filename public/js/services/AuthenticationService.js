@@ -1,95 +1,84 @@
 angular.module('studying-node')
 
-    .factory('AuthService', function($rootScope, $http, $q, Restangular, Auth, AUTH_EVENTS){
+    .config(function($authProvider) {
+        $authProvider.httpInterceptor = function() { return true; },
+        $authProvider.withCredentials = true;
+        $authProvider.baseUrl = '/';
+        $authProvider.tokenName = 'token';
+        $authProvider.tokenPrefix = 'satellizer';
+        $authProvider.authHeader = 'Authorization';
+        $authProvider.authToken = 'Bearer';
+        $authProvider.storageType = 'localStorage';
 
-        var LOCAL_TOKEN_KEY = 'millysfabrielle@@@12@@#';
-        var isAuthenticated = false;
-        var authToken;
+        // Facebook
+        $authProvider.facebook({
+            clientId: '282319505440877',
+            name: 'facebook',
+            url: '/auth/facebook',
+            authorizationEndpoint: 'https://www.facebook.com/v2.5/dialog/oauth',
+            redirectUri: window.location.origin + '/',
+            requiredUrlParams: ['display', 'scope'],
+            scope: ['email'],
+            scopeDelimiter: ',',
+            display: 'popup',
+            type: '2.0',
+            popupOptions: { width: 580, height: 400 }
+        });
+    })
 
-        function loadUserCredentials() {
-            var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
-            if (token) {
-                useCredentials(token);
-            }
-        }
 
-        function storeUserCredentials(token) {
-            window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
-            useCredentials(token);
-        }
-
-        function useCredentials(token) {
-            isAuthenticated = true;
-            authToken = token;
-
-            // Set the token as header for your requests!
-            $http.defaults.headers.common.Authorization = authToken;
-            // $rootScope.$broadcast(AUTH_EVENTS.isAuthenticated);
-        }
-
-        function destroyUserCredentials() {
-            authToken = undefined;
-            isAuthenticated = false;
-            $http.defaults.headers.common.Authorization = undefined;
-            window.localStorage.removeItem(LOCAL_TOKEN_KEY);
-            // $rootScope.$broadcast(AUTH_EVENTS.isAuthenticated);
-        }
-
-        // call function
-        loadUserCredentials();
+    .factory('AuthService', function($rootScope, $http, $q, $auth, Restangular, Auth){
 
         return {
             register: function(user){
                 return $q(function(resolve, reject) {
-                    Restangular.service('auth/signup').post(user).then(
-                        function(response){
+                    $auth.signup(user)
+                        .then(function(response) {
                             resolve(response);
-                        },
-                        function(error){
+                        })
+                        .catch(function(error) {
                             reject(error);
-                        }
-                    );
+                        });
+                });
+            },
+            authenticate: function(){
+                return $q(function(resolve, reject) {
+                    $auth.authenticate('facebook')
+                        .then(function(response) {
+                            resolve(response);
+                        })
+                        .catch(function(error) {
+                            reject(error);
+                        });
                 });
             },
             login: function(user) {
                 return $q(function(resolve, reject) {
-                    Restangular.service('auth/login').post(user).then(
-                        function(response){
-                            storeUserCredentials(response.token);
-                            resolve();
-                        },
-                        function(error){
+                    $auth.login(user)
+                        .then(function(response) {
+                            resolve(response);
+                        })
+                        .catch(function(error) {
                             reject(error);
-                        }
-                    );
+                        });
                 });
             },
             logout: function() {
-
-                /*
-                Destroy token credential for local login
-                */
-                destroyUserCredentials();
-
-                /*
-                Implementado para a session do facebook, pois no momento apenas o local session está utilizando
-                Token para autenticação
-                */
                 return $q(function(resolve, reject) {
-                    Auth.one('/logout').get().then(
-                        function(response){
-                            resolve();
-                        },
-                        function(error){
+
+                    if (!$auth.isAuthenticated()) { resolve(); }
+
+                    $auth.logout()
+                        .then(function(response) {
+                            resolve(response);
+                        })
+                        .catch(function(error) {
                             reject(error);
-                        }
-                    );
+                        });;
                 });
-
-
             },
             isAuthenticated: function(){
-                return isAuthenticated;
+                return $auth.isAuthenticated();
             }
         }
 

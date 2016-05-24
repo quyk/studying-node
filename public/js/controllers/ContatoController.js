@@ -34,7 +34,7 @@ angular.module('studying-node')
         var findAll = function () {
             ContatoService.findAll().then(
                 function (response) {
-                    $scope.contatos = response;
+                    $scope.contatos = response.data;
                 },
                 function (error) {
                     $scope.mensagem = {erro: error};

@@ -2,15 +2,20 @@
 
     <h2 class="form-signin-heading">Criar sua conta NuMap</h2>
 
-    <label for="inputName" class="sr-only">Nome</label>
-    <input type="text" id="inputName" class="form-control" ng-model="usuario.name" placeholder="Informe o seu nome" required="" autofocus="">
+    <div class="form-group">
+        <label for="inputName" class="">Nome</label>
+        <input type="text" id="inputName" class="form-control" ng-model="user.name" placeholder="Informe o seu nome" required="" autofocus="">
+    </div>
 
-    <label for="inputEmail" class="sr-only">Nome</label>
-    <input type="text" id="inputEmail" class="form-control" ng-model="usuario.email" placeholder="Informe o seu e-mail" required="">
+    <div class="form-group">
+        <label for="inputEmail" class="">Nome</label>
+        <input type="text" id="inputEmail" class="form-control" ng-model="user.email" placeholder="Informe o seu e-mail" required="">
+    </div>
 
-    <label for="inputPassword" class="sr-only">Senha</label>
-    <input type="password" id="inputPassword" class="form-control" ng-model="usuario.password" placeholder="Informe a senha" required="">
-
+    <div class="form-group">
+        <label for="inputPassword" class="">Senha</label>
+        <input type="password" id="inputPassword" class="form-control" ng-model="user.password" placeholder="Informe a senha" required="">
+    </div>
     <div class="btn-toolbar">
         <button class="btn btn-success" type="submit" ng-click="signup()">Cadastrar</button>
         <a ui-sref="index" class="btn btn-danger">Cancelar</a>

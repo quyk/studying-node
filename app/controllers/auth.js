@@ -41,66 +41,45 @@ module.exports = function (app) {
         },
         signUp: function(req, res){
 
-            console.log(req.body);
-
             if (!req.body.name || !req.body.password) {
-                res.status(500).json({success: false, msg: 'Please pass name and password.'});
+                res.status(500).json({message: 'Please pass name and password.'});
             } else {
 
-                var user = new Usuario();
-                user.email = req.body.email;
-                user.name = req.body.name;
-                user.local.password = req.body.password;
+                User.findOne({email: req.body.email}, function (error, fetchedUser) {
 
-                // save the user
-                User.create(user).then(
-                    function(response) {
-                        // 201 means that post was created
-                        res.status(201).json(response);
-                    },
-                    function(error) {
-                        //user already exist
-                        res.status(500).json(error);
+                    if(fetchedUser){
+                        res.status(409).send({message: 'E-mail already exists'});
                     }
-                );
+
+                    var user = new User();
+                    user.name = req.body.name;
+                    user.email = req.body.email;
+                    user.local.password = req.body.password;
+
+                    User.create(user).then(
+                        function(response) {
+                            res.send({token: createJWT(user)});
+                        },
+                        function(error) {
+                            res.status(500).send({message: error.message});
+                        }
+                    );
+
+                });
             }
         },
         logIn: function(req, res){
-            User.findOne({'email': req.body.email}).then(
-                function(response){
-                    if(!response){
-                        res.status(500).json('Authentication failed. User not found.');
-                    } else {
-
-                        // check if password matches
-                        response.comparePassword(req.body.password, function(error, isMatch){
-                            if( isMatch && !error){
-
-                                var user = {
-                                    _id: response._id,
-                                    name: response.name,
-                                    email: response.email
-                                };
-
-                                // if user is found and password is right create a token
-                                var token = jwt.encode(user, config.secret);
-                                // return the information including token as JSON
-                                res.json({token: 'JWT ' + token});
-                            } else {
-                                res.status(500).json('Authentication failed. Wrong password.');
-                            }
-                        })
-                    }
-                },
-                function(error){
-                    res.status(500).json(error);
+            User.findOne({email: req.body.email}, function (error, fetchedUser) {
+                if(fetchedUser){
+                    return res.status(401).send({message: 'Invalid email and/or password'});
                 }
-            );
-        },
-        logout: function(req, res){
-            req.logout();
-            // 204 means no content
-            res.status(200).end();
+                fetchedUser.comparePassword(req.body.password, function (error, isMatch) {
+                    if(!isMatch){
+                        return res.status(401).send({message: 'Invalid email and/or password'});
+                    }
+                    res.send({token: createJWT(fetchedUser)});
+                });
+            });
         },
         facebookLogIn: function (req, res) {
 
@@ -121,15 +100,8 @@ module.exports = function (app) {
                     return res.status(500).send({ message: accessToken.error.message });
                 }
 
-                console.log('---ACCESS TOKEN----');
-                console.log(accessToken);
-
                 // Step 2. Retrieve facebook profile information about the current user.
                 request.get({ url: graphApiUrl, qs: accessToken, json: true }, function(err, response, profile) {
-
-
-                    console.log('---PROFILE----');
-                    console.log(profile);
 
                     if (response.statusCode !== 200) {
                         return res.status(500).send({ message: profile.error.message });
