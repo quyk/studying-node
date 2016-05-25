@@ -46,8 +46,15 @@ angular.module('studying-node')
 
         $scope.isAuthenticated = isAuthenticated;
 
-        $scope.logout = function(){
+        AuthService.getProfile()
+            .then(function(response){
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
 
+        $scope.logout = function(){
             AuthService.logout().then(
                 function(){
                     $state.go('index',{},{reload: true});

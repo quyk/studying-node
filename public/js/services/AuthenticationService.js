@@ -27,9 +27,23 @@ angular.module('studying-node')
     })
 
 
-    .factory('AuthService', function($rootScope, $http, $q, $auth, Restangular, Auth){
+    .factory('AuthService', function($rootScope, $http, $q, $auth, User, Restangular, Auth){
 
         return {
+            getProfile: function(){
+                console.log('Aqui getProfile');
+
+                return $q(function(resolve, reject) {
+                    User.one('profile').get().then(
+                        function (response) {
+                            resolve(response);
+                        },
+                        function (error) {
+                            reject(error);
+                        }
+                    );
+                });
+            },
             register: function(user){
                 return $q(function(resolve, reject) {
                     $auth.signup(user)
@@ -86,4 +100,8 @@ angular.module('studying-node')
 
     .factory('Auth', function(Restangular) {
         return Restangular.service('auth');
+    })
+
+    .factory('User', function(Restangular) {
+        return Restangular.service('user');
     })
