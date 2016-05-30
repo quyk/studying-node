@@ -2,7 +2,8 @@ module.exports = function (app) {
 
     var jwt = require('jwt-simple'),
         mongoose = require('mongoose');
-    var config = require('../../config/variables');
+    var config = require('../config/variables');
+
     var Usuario = mongoose.model('Usuario');
     var moment = require('moment');
 

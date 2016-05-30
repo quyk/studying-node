@@ -5,16 +5,19 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     passport = require('passport'),
-    config = require('../config/variables');;
+    config = require('./variables');;
 
 module.exports = function () {
     var app = express();
 
     app.set('port', 3000);
 
-    app.use(express.static(__dirname+'/../public'));
+    // Enable compression on bower_components
+    app.use('/bower_components', express.static(__dirname + '/../../bower_components'));
+
+    app.use(express.static(__dirname+'/../../public'));
     app.set('view engine', 'ejs');
-    app.set('views','./app/views');
+    app.set('views','./server/views');
 
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
@@ -32,7 +35,7 @@ module.exports = function () {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    load('models', {cwd: 'app'})
+    load('models', {cwd: 'server'})
         .then('controllers')
         .then('routes')
         .into(app);

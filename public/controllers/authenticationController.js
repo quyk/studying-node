@@ -6,7 +6,7 @@ angular.module('studying-node')
                 url: '/',
                 views: {
                     'auth@':{
-                        templateUrl: 'partials/authentication/nav-authentication.html',
+                        templateUrl: 'views/authentication/nav-authentication.html',
                         controller: 'AuthenticationCtrl'
                     }
                 }
@@ -15,7 +15,7 @@ angular.module('studying-node')
                 url: 'login',
                 views: {
                     'content@':{
-                        templateUrl: 'partials/authentication/login.html',
+                        templateUrl: 'views/authentication/login.html',
                         controller: 'LoginCtrl'
                     }
                 }
@@ -24,7 +24,7 @@ angular.module('studying-node')
                 url: 'signup',
                 views: {
                     'content@':{
-                        templateUrl: 'partials/authentication/signup.html',
+                        templateUrl: 'views/authentication/signup.html',
                         controller: 'SignupCtrl'
                     }
                 }

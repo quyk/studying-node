@@ -9,7 +9,7 @@ angular.module('studying-node')
                 url: 'contatos',
                 views: {
                     'content@':{
-                        templateUrl: 'partials/contato/contato-list-tpl.html',
+                        templateUrl: 'views/contato/contato-list-tpl.html',
                         controller: 'ContatoListCtrl'
                     }
                 }
@@ -18,7 +18,7 @@ angular.module('studying-node')
                 url: '/view/:id',
                 views: {
                     'content@':{
-                        templateUrl: 'partials/contato/contato-view-tpl.html',
+                        templateUrl: 'views/contato/contato-view-tpl.html',
                         controller: 'ContatoViewCtrl'
                     }
                 }

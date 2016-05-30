@@ -3,7 +3,7 @@ var passport = require('passport'),
     JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt,
     mongoose = require('mongoose'),
-    config = require('../config/variables');
+    config = require('./variables');
 
 module.exports = function(){
 

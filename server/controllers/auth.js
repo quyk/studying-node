@@ -4,7 +4,7 @@ module.exports = function (app) {
     var moment = require('moment');
     var jwt = require('jwt-simple');
     var User = app.models.user;
-    var config = require('../../config/variables');
+    var config = require('../config/variables');
     var authService = require('../services/authService')();
     var request = require('request');
 
