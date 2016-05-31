@@ -5,9 +5,7 @@ body{
 }
 
 /*Headers*/
-h1{
-
-}
+h1{}
 
 /*Cointainers*/
 .container-content{
@@ -28,6 +26,18 @@ h1{
     .navbar-inverse a {
         color: #ffffff !important;
     }
+    .navbar-inverse .dropdown-menu a {
+        color: #080808 !important;
+    }
+    .navbar-inverse .dropdown-menu a[aria-expanded=true] {
+        color: #ffffff !important;
+    }
+
+    .navbar-nav>li>a{
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+
 
 .form-signin{
     margin-top: 20px !important;

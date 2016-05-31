@@ -45,10 +45,7 @@ angular.module('studying-node')
         var isAuthenticated = AuthService.isAuthenticated();
 
         $scope.isAuthenticated = isAuthenticated;
-
-        console.log("Teste");
-        console.log($scope.isAuthenticated);
-
+        
         AuthService.getProfile()
             .then(function(response){
                 console.log(response);
