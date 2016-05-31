@@ -5,7 +5,7 @@ angular.module('studying-node')
         return {
             getProfile: function(){
                 return User.one('profile').get();
-            },
+            }
         }
 
     })

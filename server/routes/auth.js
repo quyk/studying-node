@@ -15,8 +15,4 @@ module.exports = function(app){
     app.route('/auth/facebook')
         .post(controller.facebookLogIn);
 
-    app.route('/auth/user-info').get(authService().isAuthenticated, controller.getUserInfo);
-
-
-
 }
