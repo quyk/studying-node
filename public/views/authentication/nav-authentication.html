@@ -1,9 +1,8 @@
-<div ng-hide="isAuthenticated" class="navbar-right navbar-buttons">
-    <a class="btn btn-default" ui-sref="index.login" role="button">Entrar</a>
-    <a class="btn btn-default" ui-sref="index.signup" role="button">Cadastrar</a>
-</div>
+<ul ng-hide="isAuthenticated" class="nav navbar-nav navbar-right">
+    <li><a class="" ui-sref="index.login" role="button">Entrar</a></a></li>
+    <li><a class="" ui-sref="index.signup" role="button">Cadastrar</a></li>
+</ul>
 
-<div ng-show="isAuthenticated" class="navbar-right navbar-buttons">
-    <p style="color: #ffffff" >Wellcome, {{user.name}}</p>
-    <button class="btn btn-default" type="button" role="button" ng-click="logout()">Sair</button>
-</div>
+<ul ng-show="isAuthenticated" class="nav navbar-nav navbar-right">
+    <li><a class="" href="#" ng-click="logout()" role="button">Sair</a></li>
+</ul>

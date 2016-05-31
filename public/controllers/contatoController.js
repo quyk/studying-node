@@ -3,7 +3,7 @@ angular.module('studying-node')
     .config(function($stateProvider) {
         $stateProvider
             .state('index.contatos.list', {
-                url: '/list',
+                url: '/list'
             })
             .state('index.contatos',{
                 url: 'contatos',
