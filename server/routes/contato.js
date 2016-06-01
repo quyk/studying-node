@@ -3,13 +3,13 @@ module.exports = function (app) {
     var authService = require('../services/authService');
 
     app.route('/contatos')
-        .get(controller.findAll)
-        .post( controller.create)
-        .put(controller.update);
+        .get(authService().isAuthenticated, controller.findAll)
+        .post(authService().isAuthenticated, controller.create)
+        .put(authService().isAuthenticated, controller.update);
 
     app.route('/contatos/:id')
-        .get( controller.findOne)
-        .delete( controller.delete);
+        .get(authService().isAuthenticated, controller.findOne)
+        .delete(authService().isAuthenticated, controller.delete);
 
 
 }

@@ -1,15 +1,15 @@
 angular.module('studying-node')
 
-    .factory('ProfileService', function($rootScope, $http, $q, $auth, User, Restangular, Auth){
+    .factory('ProfileService', function($rootScope, $http, $q, $auth, Profile, Restangular, Auth){
 
         return {
             getProfile: function(){
-                return User.one('profile').get();
+                return Profile.one().get();
             }
         }
 
     })
 
-    .factory('User', function(Restangular) {
-        return Restangular.service('user');
+    .factory('Profile', function(Restangular) {
+        return Restangular.service('profile');
     })

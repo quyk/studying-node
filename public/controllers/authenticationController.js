@@ -40,19 +40,21 @@ angular.module('studying-node')
             })
     })
 
-    .controller('AuthenticationCtrl',function ($scope, $state, AuthService) {
+    .controller('AuthenticationCtrl',function ($scope, $state, AuthService, ProfileService) {
 
         var isAuthenticated = AuthService.isAuthenticated();
 
         $scope.isAuthenticated = isAuthenticated;
-        
-        AuthService.getProfile()
-            .then(function(response){
-                console.log(response);
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
+
+        if(isAuthenticated){
+            ProfileService.getProfile()
+                .then(function(response){
+                    console.log(response);
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        }
 
         $scope.logout = function(){
             AuthService.logout().then(
@@ -82,7 +84,6 @@ angular.module('studying-node')
         $scope.login = function(){
             AuthService.login($scope.user)
                 .then(function() {
-                    console.log('logado com sucesso');
                     $state.go('index',{},{reload: true});
                 })
                 .catch(function(error) {
