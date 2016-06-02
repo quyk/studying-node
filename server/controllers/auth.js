@@ -1,4 +1,3 @@
-
 module.exports = function (app) {
 
     var moment = require('moment');
@@ -6,8 +5,11 @@ module.exports = function (app) {
     var User = app.models.user;
     var config = require('../config/variables');
     var authService = require('../services/authService')();
-    var emailSerice = require('../services/emailService')();
+    var emailService = require('../services/emailService')();
     var request = require('request');
+
+    var ejs = require('ejs');
+    var fs = require('fs');
 
     function createJWT(user) {
         var payload = {
@@ -17,6 +19,17 @@ module.exports = function (app) {
         };
         return jwt.encode(payload, config.secret);
     }
+
+    function createLinkToken(email, accessKey) {
+        var payload = {
+            user: email,
+            accessKey: accessKey,
+            iat: moment().unix(),
+            exp: moment().add(24, 'hours').unix()
+        };
+        return jwt.encode(payload, config.secret);
+    }
+
 
     var controller = {
 
@@ -28,32 +41,32 @@ module.exports = function (app) {
                 User.findOne({email: req.body.email}, function (error, user) {
                     if(user){
 
-                        var randomPassword = authService.epicRandomString(6);
-
+                        var accessKey = authService.epicRandomString(6);
                         var mailOptions = {
                             from: "numap.app@gmail.com",
                             to: "millysfabrielle@gmail.com",
                             subject: "Recuperação de senha",
-                            generateTextFromHTML: true,
-                            html:
-                            "<style>" +
-                            "" +
-                            "</style>" +
-                            "<div>" +
-                            "<table>" +
-                                "<td></td>"+
-                            "</table>" +
-                            "</div>" +
-                            "<p>Acesse o link <a href='teste'>teste</a> e informe a senha "+randomPassword+" <p>"
+                            generateTextFromHTML: true
                         };
 
-                        emailSerice.sendMail(mailOptions, function(error, response) {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                console.log(response);
+                        fs.readFile(__dirname+'/../views/resetPassword.html', 'utf-8', function(err, content) {
+                            if (err) {
+                                return res.status(500).json({message: 'Internal error while loading email template. '+ err});
                             }
-                        })
+
+                            var linkToken = createLinkToken(user.email, accessKey);
+
+                            mailOptions.html = ejs.render(content, {name: user.name, accessKey: accessKey, linkToken: linkToken});  //get redered HTML code
+
+                            emailService.sendEmail(mailOptions, function(error, response) {
+                                if (error) {
+                                    return res.status(500).json({message: 'Internal error while sending email. '+error});
+                                } else {
+                                    return res.status(200).json({message: 'Email sent'});
+                                }
+                            });
+                        });
+
 
                     } else {
                         res.status(404).send({message: 'User not founded.'});

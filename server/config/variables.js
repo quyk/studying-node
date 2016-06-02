@@ -8,10 +8,10 @@ module.exports = {
     },
     'smtpConfig': {
         user: 'numap.app@gmail.com',
-        clientId: '596791586222-m9to0do35n5j18d1k85es2cl7rl0kej5.apps.googleusercontent.com',
-        clientSecret: 'ZYEl9xlY04j7PaDeJn7A8tmV',
-        refreshToken: '1/YWzBCndTYzFJX_yMb83TXH_RbQIg0M92ZnYWseSdRPI',
-        accessToken: 'ya29.CjHzAhPGlJwSIBJXrdS9pfFUGM3_hgeqsX5FkArTEMTecfpr8fvydi9aXaYEYxVD8Aop' // optional
+        clientId: '121797490859-bp69hqvq8bvk3tcp70n07tmg4vse696o.apps.googleusercontent.com',
+        clientSecret: 'W7CVNAM0zNrwmcu6zHNZUIDK',
+        refreshToken: '1/DVMHxDGD-d969Tv5AnZvbeAozZsQTPUXg4YCwQ3GQlw',
+        accessToken: 'ya29.Ci_1AotJhSuaSuhKPYuvvqwUG62N9WxYCcgRcmxR7wvvgsKrpdoLsDyZ5ucnOAitcQ' // optional
     }
 
 };
