@@ -1,5 +1,5 @@
 module.exports = function(app){
-    var controller = app.controllers.profileController;
+    var controller = app.controllers.profile;
     var authService = require('../services/authService');
 
     app.route('/profile')

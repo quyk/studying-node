@@ -12,6 +12,9 @@ module.exports = function () {
 
     app.set('port', 3000);
 
+    // Set nodemailer transport for app
+
+
     // Enable compression on bower_components
     app.use('/bower_components', express.static(__dirname + '/../../bower_components'));
 

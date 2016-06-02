@@ -22,7 +22,7 @@ angular.module('studying-node',['ui.router','restangular','satellizer'])
                 'index',
                 'index.login',
                 'index.signup',
-                'index.teste'
+                'index.resetPassword'
             ];
 
             if (!AuthService.isAuthenticated()) {

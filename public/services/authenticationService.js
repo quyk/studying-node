@@ -30,6 +30,9 @@ angular.module('studying-node')
     .factory('AuthService', function($rootScope, $http, $q, $auth, User, Restangular, Auth){
 
         return {
+            resetPassword: function(email){
+                return Auth.one('reset-password').post({email: $scope.user.email});
+            },
             register: function(user){
                 return $q(function(resolve, reject) {
                     $auth.signup(user)
@@ -74,7 +77,7 @@ angular.module('studying-node')
                         })
                         .catch(function(error) {
                             reject(error);
-                        });;
+                        });
                 });
             },
             isAuthenticated: function(){

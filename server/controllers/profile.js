@@ -10,8 +10,9 @@ module.exports = function (app) {
         var decodedToken =  authService.restoreToken(req.headers);
         if (decodedToken) {
 
-            // .select('-_id email name')
-            User.findOne({'email': decodedToken.email}).exec().then(
+            console.log(decodedToken);
+
+            User.findOne({'_id': decodedToken.sub}).exec().then(
                 function(response){
                     if (!response) {
                         return res.status(404).send('User Info failed. User not found.');
@@ -28,7 +29,6 @@ module.exports = function (app) {
         }
 
     };
-
 
     return controller;
 

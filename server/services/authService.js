@@ -22,10 +22,14 @@ module.exports = function (app) {
 
     var functions = {}
 
+    functions.epicRandomString = function (b){
+        for(var a=(Math.random()*eval("1e"+~~(50*Math.random()+50))).toString(36).split(""),c=3;c<a.length;c++)c==~~(Math.random()*c)+1&&a[c].match(/[a-z]/)&&(a[c]=a[c].toUpperCase());a=a.join("");a=a.substr(~~(Math.random()*~~(a.length/3)),~~(Math.random()*(a.length-~~(a.length/3*2)+1))+~~(a.length/3*2));if(24>b)return b?a.substr(a,b):a;a=a.substr(a,b);if(a.length==b)return a;for(;a.length<b;)a+=epicRandomString();return a.substr(0,b)
+    };
+
     functions.restoreToken = function (headers) {
         var token = getToken(headers);
         return jwt.decode(token, config.secret);
-    }
+    };
 
     functions.isAuthenticated = function (req, res, next) {
         if (!req.header('Authorization')) {
@@ -46,7 +50,7 @@ module.exports = function (app) {
         }
         req.user = payload.sub;
         next();
-    }
+    };
 
 
 

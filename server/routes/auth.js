@@ -10,6 +10,8 @@ module.exports = function(app){
     // Email and Password signup
     app.route('/auth/signup').post(controller.signUp);
 
+    // reset user password
+    app.route('/auth/reset-password').post(controller.resetPassword);
 
     // Facebook Authentication
     app.route('/auth/facebook')

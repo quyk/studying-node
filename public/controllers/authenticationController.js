@@ -29,15 +29,16 @@ angular.module('studying-node')
                     }
                 }
             })
-            .state('index.teste', {
-                url: 'teste',
+            .state('index.resetPassword', {
+                url: 'recover',
                 views: {
                     'content@':{
-                        templateUrl: '',
-                        controller: 'TesteCtrl'
+                        templateUrl: 'views/authentication/recover-password.html',
+                        controller: 'ResetRPasswordCtrl'
                     }
                 }
             })
+
     })
 
     .controller('AuthenticationCtrl',function ($scope, $state, AuthService, ProfileService) {
@@ -50,6 +51,9 @@ angular.module('studying-node')
             ProfileService.getProfile()
                 .then(function(response){
                     console.log(response);
+                    $scope.profile = {
+                        picture: response.data.picture || ""
+                    }
                 })
                 .catch(function(error) {
                     console.log(error);
@@ -106,6 +110,20 @@ angular.module('studying-node')
                 }
             );
         };
+    })
+    .controller('ResetRPasswordCtrl',function ($scope, $state, $auth, AuthService) {
+
+        $scope.resetPassword = function(){
+
+            AuthService.resetPassword($scope.user.email)
+                .then(function(response) {
+                    console.log(response);
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        }
+
     })
 
 ;

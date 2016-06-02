@@ -6,6 +6,7 @@ module.exports = function (app) {
     var User = app.models.user;
     var config = require('../config/variables');
     var authService = require('../services/authService')();
+    var emailSerice = require('../services/emailService')();
     var request = require('request');
 
     function createJWT(user) {
@@ -18,6 +19,50 @@ module.exports = function (app) {
     }
 
     var controller = {
+
+        resetPassword: function(req, res){
+            if (!req.body.email) {
+                res.status(500).json({message: 'Please inform your email.'});
+            } else {
+
+                User.findOne({email: req.body.email}, function (error, user) {
+                    if(user){
+
+                        var randomPassword = authService.epicRandomString(6);
+
+                        var mailOptions = {
+                            from: "numap.app@gmail.com",
+                            to: "millysfabrielle@gmail.com",
+                            subject: "Recuperação de senha",
+                            generateTextFromHTML: true,
+                            html:
+                            "<style>" +
+                            "" +
+                            "</style>" +
+                            "<div>" +
+                            "<table>" +
+                                "<td></td>"+
+                            "</table>" +
+                            "</div>" +
+                            "<p>Acesse o link <a href='teste'>teste</a> e informe a senha "+randomPassword+" <p>"
+                        };
+
+                        emailSerice.sendMail(mailOptions, function(error, response) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log(response);
+                            }
+                        })
+
+                    } else {
+                        res.status(404).send({message: 'User not founded.'});
+                    }
+                });
+            }
+
+
+        },
         signUp: function(req, res){
 
             if (!req.body.name || !req.body.password) {

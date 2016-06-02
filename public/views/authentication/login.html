@@ -3,11 +3,16 @@
 
     <div ng-show="mensagem.texto" class="alert alert-danger">{{mensagem.texto}}</div>
 
-    <label for="inputEmail" class="sr-only">Email</label>
+    <label for="inputEmail" class="">Email</label>
     <input type="text" id="inputEmail" class="form-control" ng-model="usuario.email" placeholder="Informe o e-mail" required="" autofocus="">
 
-    <label for="inputPassword" class="sr-only">Senha</label>
+    <label for="inputPassword" class="">Senha</label>
     <input type="password" id="inputPassword" class="form-control" ng-model="usuario.password" placeholder="Informe a senha" required="">
+
+
+    <a ui-sref="index.resetPassword" class="pull-right">Esqueci minha senha</a>
+
+    <div class="clearfix"></div>
 
     <div class="checkbox">
         <label>
