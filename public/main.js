@@ -1,4 +1,4 @@
-angular.module('studying-node',['ui.router','restangular','satellizer'])
+angular.module('studying-node',['ui.router','restangular','satellizer', 'authentication'])
 
     // Restangular confidurantion
     .config(function(RestangularProvider, $httpProvider, $locationProvider) {
@@ -15,7 +15,7 @@ angular.module('studying-node',['ui.router','restangular','satellizer'])
         $state.transitionTo('index');
     })
 
-    .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+    .run(function ($rootScope, $state, AuthService) {
         $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
 
             var authorizedResouces = [
@@ -32,11 +32,6 @@ angular.module('studying-node',['ui.router','restangular','satellizer'])
                 }
             }
         });
-    })
-
-    .constant('AUTH_EVENTS', {
-        notAuthenticated: 'auth-not-authenticated',
-        isAuthenticated: 'is-authenticated'
     })
 
 ;

@@ -55,8 +55,7 @@
     </div>
 
 
-
-
+    <!--Third party libraries-->
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
@@ -68,13 +67,19 @@
 
     <script src="/bower_components/satellizer/satellizer.min.js"></script>
 
+
+    <!--APP libraries & components-->
     <script src="main.js" ></script>
-    <script src="controllers/contatoController.js" ></script>
+    <script src="httpInterceptor.js" ></script>
 
-    <script src="controllers/authenticationController.js" ></script>
-    <script src="services/authenticationService.js" ></script>
+    <!--<script src="controllers/contatoController.js" ></script>-->
 
-    <script src="services/profileService.js" ></script>
-    <script src="services/interceptorService.js" ></script>
+    <script src="components/authentication/authenticationRoute.js" ></script>
+    <script src="components/authentication/authenticationController.js" ></script>
+    <script src="components/authentication/authenticationService.js" ></script>
+
+
+    <script src="components/authentication/profileService.js" ></script>
+
 </body>
 </html>

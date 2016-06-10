@@ -1,47 +1,6 @@
 angular.module('studying-node')
     
-    .config(function($stateProvider) {
-        $stateProvider
-            .state('index', {
-                url: '/',
-                views: {
-                    'auth@':{
-                        templateUrl: 'views/authentication/nav-authentication.html',
-                        controller: 'AuthenticationCtrl'
-                    }
-                }
-            })
-            .state('index.login', {
-                url: 'login',
-                views: {
-                    'content@':{
-                        templateUrl: 'views/authentication/login.html',
-                        controller: 'LoginCtrl'
-                    }
-                }
-            })
-            .state('index.signup', {
-                url: 'signup',
-                views: {
-                    'content@':{
-                        templateUrl: 'views/authentication/signup.html',
-                        controller: 'SignupCtrl'
-                    }
-                }
-            })
-            .state('index.resetPassword', {
-                url: 'recover',
-                views: {
-                    'content@':{
-                        templateUrl: 'views/authentication/recover-password.html',
-                        controller: 'ResetRPasswordCtrl'
-                    }
-                }
-            })
-
-    })
-
-    .controller('AuthenticationCtrl',function ($scope, $state, AuthService, ProfileService) {
+    .controller('AuthenticationCtrl',[ '$scope', '$state', 'AuthService', 'ProfileService',  function ($scope, $state, AuthService, ProfileService) {
 
         var isAuthenticated = AuthService.isAuthenticated();
 
@@ -50,13 +9,12 @@ angular.module('studying-node')
         if(isAuthenticated){
             ProfileService.getProfile()
                 .then(function(response){
-                    console.log(response);
                     $scope.profile = {
                         picture: response.data.picture || ""
                     }
                 })
                 .catch(function(error) {
-                    console.log(error);
+                    //to do
                 });
         }
 
@@ -70,7 +28,7 @@ angular.module('studying-node')
                 });;
         }
 
-    })
+    }])
     .controller('LoginCtrl',function ($scope, $state, $auth, AuthService) {
 
         $scope.login_fb = function(){
