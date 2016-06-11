@@ -51,6 +51,9 @@
     </nav>
 
     <div class="container container-content">
+
+        <c-user-auth ></c-user-auth>
+
         <div ui-view name="content"></div>
     </div>
 
@@ -75,6 +78,7 @@
     <!--<script src="controllers/contatoController.js" ></script>-->
 
     <script src="components/authentication/authenticationRoute.js" ></script>
+    <script src="components/authentication/userAuthDirective.js" ></script>
     <script src="components/authentication/authenticationController.js" ></script>
     <script src="components/authentication/authenticationService.js" ></script>
 

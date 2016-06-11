@@ -7,10 +7,7 @@ angular.module('authentication',[])
                 views: {
                     'auth@':{
                         templateUrl: 'components/authentication/views/nav-authentication.html',
-                        controller: 'AuthenticationCtrl',
-                        resolve:{
-                            isAuthenticated: 
-                        }
+                        controller: 'AuthenticationCtrl'
                     }
                 }
             })

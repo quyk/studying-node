@@ -1,5 +1,28 @@
 angular.module('studying-node')
-    
+
+    .controller('AuthCtrl', [ '$scope','AuthService', 'ProfileService', function($scope, AuthService, ProfileService) {
+
+        var isAuthenticated = AuthService.isAuthenticated();
+        this.isAuthenticated = isAuthenticated;
+
+        if(isAuthenticated){
+            ProfileService.getProfile()
+                .then(function(response){
+
+
+
+                    this.profile = {
+                        picture: response.data.picture || ""
+                    }
+                    console.log(response);
+                })
+                .catch(function(error) {
+                    //to do
+                });
+        }
+
+    }])
+
     .controller('AuthenticationCtrl',[ '$scope', '$state', 'AuthService', 'ProfileService',  function ($scope, $state, AuthService, ProfileService) {
 
         var isAuthenticated = AuthService.isAuthenticated();
