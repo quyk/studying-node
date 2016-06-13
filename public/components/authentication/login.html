@@ -1,6 +1,8 @@
 <form class="form-signin content-background">
     <h2 class="form-signin-heading">Entrar no NuMap</h2>
 
+    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+
     <div ng-show="mensagem.texto" class="alert alert-danger">{{mensagem.texto}}</div>
 
     <label for="inputEmail" class="">Email</label>

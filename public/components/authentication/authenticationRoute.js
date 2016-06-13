@@ -2,38 +2,29 @@ angular.module('authentication',[])
 
     .config(function($stateProvider) {
         $stateProvider
-            .state('index', {
-                url: '/',
-                views: {
-                    'auth@':{
-                        templateUrl: 'components/authentication/views/nav-authentication.html',
-                        controller: 'AuthenticationCtrl'
-                    }
-                }
-            })
-            .state('index.login', {
-                url: 'login',
+            .state('login', {
+                url: '/login',
                 views: {
                     'content@':{
-                        templateUrl: 'views/authentication/login.html',
+                        templateUrl: 'components/authentication/login.html',
                         controller: 'LoginCtrl'
                     }
                 }
             })
-            .state('index.signup', {
-                url: 'signup',
+            .state('signUp', {
+                url: '/sign-up',
                 views: {
                     'content@':{
-                        templateUrl: 'views/authentication/signup.html',
+                        templateUrl: 'components/authentication/sign-up.html',
                         controller: 'SignupCtrl'
                     }
                 }
             })
-            .state('index.resetPassword', {
-                url: 'recover',
+            .state('resetPassword', {
+                url: '/reset-password',
                 views: {
                     'content@':{
-                        templateUrl: 'views/authentication/recover-password.html',
+                        templateUrl: 'components/authentication/recover-password.html',
                         controller: 'ResetRPasswordCtrl'
                     }
                 }

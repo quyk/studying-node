@@ -1,64 +1,20 @@
 angular.module('studying-node')
 
-    .controller('AuthCtrl', [ '$scope','AuthService', 'ProfileService', function($scope, AuthService, ProfileService) {
+    .controller('LoginCtrl',function ($scope, $state, $auth, AuthService, AlertService) {
 
-        var isAuthenticated = AuthService.isAuthenticated();
-        this.isAuthenticated = isAuthenticated;
+        $scope.alerts = [
+            { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' },
+            { type: 'success', msg: 'Well done! You successfully read this important alert message.' }
+        ];
 
-        if(isAuthenticated){
-            ProfileService.getProfile()
-                .then(function(response){
-
-
-
-                    this.profile = {
-                        picture: response.data.picture || ""
-                    }
-                    console.log(response);
-                })
-                .catch(function(error) {
-                    //to do
-                });
-        }
-
-    }])
-
-    .controller('AuthenticationCtrl',[ '$scope', '$state', 'AuthService', 'ProfileService',  function ($scope, $state, AuthService, ProfileService) {
-
-        var isAuthenticated = AuthService.isAuthenticated();
-
-        $scope.isAuthenticated = isAuthenticated;
-
-        if(isAuthenticated){
-            ProfileService.getProfile()
-                .then(function(response){
-                    $scope.profile = {
-                        picture: response.data.picture || ""
-                    }
-                })
-                .catch(function(error) {
-                    //to do
-                });
-        }
-
-        $scope.logout = function(){
-            AuthService.logout().then(
-                function(){
-                    $state.go('index',{},{reload: true});
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });;
-        }
-
-    }])
-    .controller('LoginCtrl',function ($scope, $state, $auth, AuthService) {
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
 
         $scope.login_fb = function(){
 
             AuthService.authenticate()
                 .then(function(response) {
-                    console.log(response);
                     $state.go('index',{},{reload: true});
                 })
                 .catch(function(error) {

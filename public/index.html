@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" />
     <link rel="stylesheet" href="/bower_components/bootstrap-social/bootstrap-social.css" />
     <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css" />
     <link rel="stylesheet" href="/assets/css/custom-theme.css" />
     <link rel="stylesheet" href="/assets/css/signin.css" />
 
@@ -41,7 +42,7 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
 
-                <div ui-view name="auth"></div>
+                <user-info></user-info>
 
             </div>
 
@@ -51,9 +52,6 @@
     </nav>
 
     <div class="container container-content">
-
-        <c-user-auth ></c-user-auth>
-
         <div ui-view name="content"></div>
     </div>
 
@@ -70,20 +68,30 @@
 
     <script src="/bower_components/satellizer/satellizer.min.js"></script>
 
+    <!--Bootstrap UI-->
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
 
     <!--APP libraries & components-->
     <script src="main.js" ></script>
-    <script src="httpInterceptor.js" ></script>
+
+    <script src="components/home/homeModule.js" ></script>
+
 
     <!--<script src="controllers/contatoController.js" ></script>-->
+    <script src="components/shared/services/authenticationService.js" ></script>
+    <script src="components/shared/services/profileService.js" ></script>
+    <script src="components/shared/services/alertService.js" ></script>
+
+    <script src="components/shared/directives/authenticatedDirective.js" ></script>
+    <script src="components/shared/directives/userInfoDirective.js" ></script>
+
 
     <script src="components/authentication/authenticationRoute.js" ></script>
-    <script src="components/authentication/userAuthDirective.js" ></script>
     <script src="components/authentication/authenticationController.js" ></script>
-    <script src="components/authentication/authenticationService.js" ></script>
 
 
-    <script src="components/authentication/profileService.js" ></script>
 
 </body>
 </html>

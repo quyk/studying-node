@@ -1,4 +1,4 @@
-angular.module('studying-node',['ui.router','restangular','satellizer', 'authentication'])
+angular.module('studying-node',['ui.router','restangular','satellizer','ui.bootstrap', 'authentication'])
 
     // Restangular confidurantion
     .config(function(RestangularProvider, $httpProvider, $locationProvider) {
@@ -12,10 +12,10 @@ angular.module('studying-node',['ui.router','restangular','satellizer', 'authent
 
     // run to initial state
     .run(function ($state) {
-        $state.transitionTo('index');
+        $state.transitionTo('home');
     })
 
-    .run(function ($rootScope, $state, AuthService) {
+/*    .run(function ($rootScope, $state, AuthService) {
         $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
 
             var authorizedResouces = [
@@ -32,6 +32,26 @@ angular.module('studying-node',['ui.router','restangular','satellizer', 'authent
                 }
             }
         });
+    })*/
+
+    .factory('httpErrorResponseInterceptor', function($q, $location) {
+        return {
+            responseError : function error(response) {
+
+                switch (response.status) {
+                    case 401:
+                        $location.path('/login');
+                        break;
+                    case 403:
+                        $location.path('/not-authorized');
+                        break;
+                    case 404:
+                        $location.path('/not-found');
+                        break;
+                }
+                return $q.reject(response);
+            }
+        };
     })
 
 ;
