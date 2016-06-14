@@ -1,0 +1,51 @@
+<div class="row content-background">
+    <div class="col-md-12">
+
+        <h1 class="page-header">Adicionar um novo serviço ao NuMap</h1>
+
+        <form name="createServiceForm" class="">
+
+            <div class="form-group">
+                <label for="inputName" class="">Nome</label>
+                <input type="text" id="inputName" class="form-control" ng-model="service.name" placeholder="Informe o nome" required="" autofocus="">
+            </div>
+
+            <div class="form-group">
+                <label for="inputAddress" class="">Endereço</label>
+                <input type="text" id="inputAddress" class="form-control" ng-model="service.address" placeholder="Informe o endereço" required="">
+            </div>
+
+            <div class="form-group">
+                <label for="inputCity" class="">Cidade</label>
+                <input type="text" id="inputCity" class="form-control" ng-model="service.city" placeholder="Informe a cidade" required="">
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword" class="">Senha</label>
+                <input type="password" id="inputPassword" class="form-control" ng-model="user.password" placeholder="Informe a senha" required="">
+            </div>
+            <div class="btn-toolbar">
+                <button class="btn btn-success" type="submit" ng-click="signup()">Cadastrar</button>
+                <a ui-sref="index" class="btn btn-danger">Cancelar</a>
+            </div>
+
+        </form>
+
+aaaa
+
+
+    <div id="map" style=" width: 600px; height: 300px;"></div>
+    <script>
+        var map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAn5ibHt2HA_j1gzit--kc1Uv21poNhotY&callback=initMap"
+            async defer></script>
+    </div>
+
+</div>

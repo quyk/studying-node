@@ -34,11 +34,16 @@ module.exports = function (app) {
     var controller = {
 
         resetPassword: function(req, res){
+
+            console.log('Controller = '+req.body.email);
+
             if (!req.body.email) {
                 res.status(500).json({message: 'Please inform your email.'});
             } else {
 
                 User.findOne({email: req.body.email}, function (error, user) {
+                    console.log(user);
+
                     if(user){
 
                         var accessKey = authService.epicRandomString(6);

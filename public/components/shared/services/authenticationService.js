@@ -31,7 +31,7 @@ angular.module('studying-node')
 
         return {
             resetPassword: function(email){
-                return Auth.one('reset-password').post({email: $scope.user.email});
+                return Auth.one('reset-password').customPOST({"email":email});
             },
             register: function(user){
                 return $q(function(resolve, reject) {

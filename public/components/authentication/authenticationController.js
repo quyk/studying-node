@@ -16,14 +16,13 @@
             }
 
             $scope.login = function(isValid){
-                console.log(dtAlertService);
                 if(isValid) {
                     AuthService.login($scope.user)
                         .then(function () {
                             $state.go('home', {}, {reload: true});
                         })
                         .catch(function (error) {
-                            console.log(error);
+                            dtAlertService.add('danger',error.message);
                         }
                     );
                 } else {
@@ -50,18 +49,23 @@
                 );
             };
         })
-        .controller('ResetRPasswordCtrl',function ($scope, $state, $auth, AuthService) {
-            $scope.resetPassword = function(){
-                AuthService.resetPassword($scope.user.email)
-                    .then(function(response) {
-                        console.log(response);
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                    });
+        .controller('ResetRPasswordCtrl',['$scope', '$state', 'dtAlertService', 'AuthService', function ($scope, $state, dtAlertService, AuthService) {
+            $scope.resetPassword = function(isValid){
+                if(isValid === true) {
+                    console.log($scope.user.email);
+                    AuthService.resetPassword($scope.user.email).then(
+                        function (response) {
+                            console.log(response);
+                            dtAlertService.add('success', response.message);
+                        },
+                        function (error) {
+                            console.log(error);
+                            dtAlertService.add('danger', error.statusText);
+                        });
+                }
             }
 
-        })
+        }])
 
     ;
 
