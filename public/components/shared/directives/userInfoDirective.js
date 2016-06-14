@@ -3,43 +3,35 @@
 
     angular.module('studying-node')
 
-        .directive('userInfo', function (AuthService) {
+        .directive('userInfo',['AuthService', 'ProfileService', function (AuthService, ProfileService) {
             return{
                 restrict: 'E',
                 templateUrl: 'components/shared/directives/user-info-template.html',
-                controller: 'UserInfoCtrl',
-                controllerAs: 'ctrl'
+                controller: function($scope){
+                    $scope.isAuthenticated = AuthService.isAuthenticated();
+                    console.log('Controller := ' + AuthService.isAuthenticated());
+
+                    $scope.$watch(AuthService.isAuthenticated(), function () {
+                        console.log('Controller Watch := ' + AuthService.isAuthenticated());
+                    });
+                },
+                link: function (scope, element, attrs) {
+                    scope.$watch(AuthService.isAuthenticated(), function () {
+
+                        console.log('Link := ' + AuthService.isAuthenticated());
+
+                          if(AuthService.isAuthenticated()) {
+                            ProfileService.getProfile()
+                                .then( function (response) {
+                                    console.log(response);
+                                    scope.profile = {
+                                        picture: response.data.picture || ""
+                                    };
+                                })
+                        }
+                    });
+                }
             }
-        })
-
-        .controller('UserInfoCtrl',['$scope','AuthService', 'ProfileService', function ($scope, AuthService, ProfileService) {
-
-            var isAuthenticated = AuthService.isAuthenticated();
-
-            console.log(isAuthenticated);
-
-            /*$scope.isAuthenticated = isAuthenticated;
-
-            if(isAuthenticated === true){
-                ProfileService.getProfile()
-                    .then( function (response) {
-                        $scope.profile = {
-                            picture: response.data.picture || ""
-                        };
-                    })
-            }*/
-
-
-            /*$scope.logout = function(){
-                AuthService.logout().then(
-                    function(){
-                        $state.go('index',{},{reload: true});
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                    });;*/
-
-
         }])
 
 }());

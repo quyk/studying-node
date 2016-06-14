@@ -29,7 +29,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">NuMap</a>
+                <a class="navbar-brand" data-ui-sref="home">NuMap</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -42,7 +42,7 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
 
-                <user-info></user-info>
+                <div ui-view name="user-info"></div>
 
             </div>
 
@@ -82,10 +82,11 @@
     <!--<script src="controllers/contatoController.js" ></script>-->
     <script src="components/shared/services/authenticationService.js" ></script>
     <script src="components/shared/services/profileService.js" ></script>
-    <script src="components/shared/services/alertService.js" ></script>
+    <!-- <script src="components/shared/services/alertService.js" ></script> -->
 
+    <script src="components/shared/directives/dtAlertDirective.js" ></script>
     <script src="components/shared/directives/authenticatedDirective.js" ></script>
-    <script src="components/shared/directives/userInfoDirective.js" ></script>
+    <!-- <script src="components/shared/directives/userInfoDirective.js" ></script> -->
 
 
     <script src="components/authentication/authenticationRoute.js" ></script>
