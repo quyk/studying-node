@@ -107,15 +107,16 @@ module.exports = function (app) {
         },
         logIn: function(req, res){
             User.findOne({email: req.body.email}, function (error, fetchedUser) {
-                if(fetchedUser){
+                if(fetchedUser == null){
                     return res.status(401).send({message: 'Invalid email and/or password'});
+                } else {
+                    fetchedUser.comparePassword(req.body.password, function (error, isMatch) {
+                        if (!isMatch) {
+                            return res.status(401).send({message: 'Invalid email and/or password'});
+                        }
+                        res.send({token: createJWT(fetchedUser)});
+                    });
                 }
-                fetchedUser.comparePassword(req.body.password, function (error, isMatch) {
-                    if(!isMatch){
-                        return res.status(401).send({message: 'Invalid email and/or password'});
-                    }
-                    res.send({token: createJWT(fetchedUser)});
-                });
             });
         },
         facebookLogIn: function (req, res) {

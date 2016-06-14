@@ -67,18 +67,9 @@ angular.module('studying-node')
                 });
             },
             logout: function() {
-                return $q(function(resolve, reject) {
-
-                    if (!$auth.isAuthenticated()) { resolve(); }
-
-                    $auth.logout()
-                        .then(function(response) {
-                            resolve(response);
-                        })
-                        .catch(function(error) {
-                            reject(error);
-                        });
-                });
+                $auth.logout();
+                console.log('$auth.logout();');
+                return;
             },
             isAuthenticated: function(){
                 return $auth.isAuthenticated();
