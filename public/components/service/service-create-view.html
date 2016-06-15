@@ -12,12 +12,22 @@
 
             <div class="form-group">
                 <label for="inputAddress" class="">Endereço</label>
-                <input type="text" id="inputAddress" class="form-control" ng-model="service.address" placeholder="Informe o endereço" required="">
+                <input type="text" id="inputAddress" class="form-control" ng-model="service.address" placeholder="Informe o endereço" required="" onFocus="geolocate()">
             </div>
 
             <div class="form-group">
                 <label for="inputCity" class="">Cidade</label>
                 <input type="text" id="inputCity" class="form-control" ng-model="service.city" placeholder="Informe a cidade" required="">
+            </div>
+
+            <div class="form-group">
+                <label for="inputCity" class="">Estado</label>
+                <input type="text" id="inputState" class="form-control" ng-model="service.state" placeholder="Informe o estado" required="">
+            </div>
+
+            <div class="form-group">
+                <label for="inputCity" class="">CEP</label>
+                <input type="text" id="inputCep" class="form-control" ng-model="service.cep" placeholder="Informe o estado" required="">
             </div>
 
             <div class="form-group">
@@ -44,7 +54,7 @@ aaaa
             });
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAn5ibHt2HA_j1gzit--kc1Uv21poNhotY&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAn5ibHt2HA_j1gzit--kc1Uv21poNhotY&libraries=places&callback=initAutocomplete"
             async defer></script>
     </div>
 
