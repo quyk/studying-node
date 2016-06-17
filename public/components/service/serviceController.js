@@ -13,26 +13,31 @@
             }
 
             $scope.markerChanged = function(event){
-                console.log('markerChanged');
-                var ll = event.latLng;
-
                 var geocoder = new google.maps.Geocoder;
+                var ll = event.latLng;
                 var latlng = {lat:ll.lat(), lng: ll.lng()};
+
                 console.log(latlng);
+
                 geocoder.geocode({'location': latlng}, function(results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
-                        console.log(results);
-                        /*if (results[1]) {
-                        } else {
-                            window.alert('No results found');
-                        }*/
+                        var address = MapsService.getAddressComponents(results[0].address_components);
+                        address['lat'] = latlng.lat;
+                        address['lng'] = latlng.lng;
+
+                        console.log('OLD ADDRESS');
+                        console.log($scope.service.address);
+
+                        $scope.service.address =  address ;
+                        $scope.$apply();
+
+                        console.log('NEW ADDRESS');
+                        console.log($scope.service.address);
+
                     } else {
                         window.alert('Geocoder failed due to: ' + status);
                     }
                 });
-
-                console.log();
-                console.log(event);
             }
 
             $scope.placeChanged = function() {
